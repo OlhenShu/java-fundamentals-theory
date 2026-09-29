@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тема 01. Java Introduction — Java Fundamentals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F3F5F9;
+  --surface: #FFFFFF;
+  --surface-2: #E9EEF6;
+  --ink: #15213A;
+  --muted: #56637B;
+  --line: #D3DAE6;
+  --navy: #13294B;
+  --navy-ink: #FFFFFF;
+  --accent: #D2600C;
+  --accent-soft: #FCE9DA;
+  --link: #1C4E9A;
+  --imp: #1C4E9A;
+  --imp-soft: #E2EAF7;
+  --err: #B0281F;
+  --err-soft: #FAE3E1;
+  --tip: #17684E;
+  --tip-soft: #DDF0E7;
+  --ok: #17684E;
+  --code-bg: #0D1830;
+  --code-bar: #14223F;
+  --code-ink: #E2E8F2;
+  --code-muted: #7D8BA6;
+  --code-active: #22385F;
+  --code-kw: #FF9A4D;
+  --code-type: #7FC6FF;
+  --code-str: #A8DC8E;
+  --code-num: #F5C97A;
+  --code-com: #7D8BA6;
+  --shadow: 0 1px 2px rgba(19, 41, 75, .08);
+  --font-text: "Onest", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-code: "JetBrains Mono", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1322;
+    --surface: #111C31;
+    --surface-2: #17243D;
+    --ink: #E3E9F3;
+    --muted: #9AA8C0;
+    --line: #26375A;
+    --navy: #0F1E3A;
+    --navy-ink: #E3E9F3;
+    --accent: #FF9447;
+    --accent-soft: #3A2615;
+    --link: #8DB4FF;
+    --imp: #8DB4FF;
+    --imp-soft: #16294A;
+    --err: #FF8A80;
+    --err-soft: #3A1917;
+    --tip: #6FD3AE;
+    --tip-soft: #11322A;
+    --ok: #6FD3AE;
+    --code-bg: #070E1D;
+    --code-bar: #0E1830;
+    --code-active: #1D3257;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1322;
+  --surface: #111C31;
+  --surface-2: #17243D;
+  --ink: #E3E9F3;
+  --muted: #9AA8C0;
+  --line: #26375A;
+  --navy: #0F1E3A;
+  --navy-ink: #E3E9F3;
+  --accent: #FF9447;
+  --accent-soft: #3A2615;
+  --link: #8DB4FF;
+  --imp: #8DB4FF;
+  --imp-soft: #16294A;
+  --err: #FF8A80;
+  --err-soft: #3A1917;
+  --tip: #6FD3AE;
+  --tip-soft: #11322A;
+  --ok: #6FD3AE;
+  --code-bg: #070E1D;
+  --code-bar: #0E1830;
+  --code-active: #1D3257;
+  --shadow: none;
+  color-scheme: dark;
+}
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 84px); scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+}
+img, svg { max-width: 100%; }
+a { color: var(--link); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+code { font-family: var(--font-code); font-size: .88em; background: var(--surface-2); padding: .08em .35em; border-radius: 4px; }
+
+/* ---------- header ---------- */
+.site-header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 50;
+  background: var(--navy);
+  color: var(--navy-ink);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.header-inner {
+  display: flex; align-items: center; gap: 16px;
+  max-width: 1240px; margin: 0 auto; padding: 12px 20px;
+}
+.brand { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.brand small { font-size: 13px; opacity: .75; letter-spacing: .01em; }
+.brand strong { font-size: 18px; font-weight: 700; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 600 14px var(--font-text);
+  color: var(--navy);
+  background: #FFFFFF;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+:root[data-theme="dark"] .theme-toggle { background: #1B2B4A; color: #F3F6FB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .theme-toggle { background: #1B2B4A; color: #F3F6FB; } }
+.theme-toggle .icon { font-size: 16px; line-height: 1; }
+.progress { height: 4px; background: rgba(255,255,255,.12); }
+.progress span { display: block; height: 100%; width: 0; background: var(--accent); }
+
+/* ---------- layout ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 48px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+.toc {
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 76px);
+  align-self: start;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  padding: 28px 6px 24px 0;
+  scrollbar-width: thin;
+}
+.toc-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 10px; }
+.toc-head h2 { font-size: 14px; color: var(--muted); font-weight: 600; margin: 0; }
+.toc-close { display: none; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc > ol { border-left: 2px solid var(--line); }
+.toc a {
+  display: flex; gap: 8px; padding: 5px 8px 5px 14px; margin-left: -2px;
+  border-left: 2px solid transparent;
+  color: var(--muted); text-decoration: none; font-size: 14.5px; line-height: 1.35;
+}
+.toc a .n { color: var(--accent); font-weight: 600; min-width: 1.3em; font-variant-numeric: tabular-nums; }
+.toc a:hover { color: var(--ink); background: var(--surface-2); }
+.toc a.active { color: var(--ink); border-left-color: var(--accent); font-weight: 600; background: var(--surface-2); }
+.toc a.sub { padding-left: 38px; font-size: 13.5px; }
+.toc a.sub.active { font-weight: 600; }
+.toc-open, .toc-overlay { display: none; }
+main { min-width: 0; max-width: 820px; }
+
+/* ---------- hero ---------- */
+.hero { padding: 44px 0 20px; }
+.hero h1 {
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  margin: 0 0 18px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.hero h1 .num { color: var(--accent); }
+.hero p.lead { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 62ch; }
+.pipeline {
+  display: flex; flex-wrap: wrap; align-items: stretch; gap: 0;
+  background: var(--code-bg); color: var(--code-ink);
+  border-radius: 14px; padding: 18px; overflow-x: auto;
+}
+.pipe-step { display: flex; flex-direction: column; justify-content: center; min-width: 118px; padding: 8px 12px; }
+.pipe-step b { font-family: var(--font-code); font-size: 14.5px; font-weight: 600; }
+.pipe-step span { font-size: 12.5px; color: var(--code-muted); }
+.pipe-step.tool b { color: var(--code-kw); }
+.pipe-arrow { display: flex; align-items: center; color: var(--code-kw); font-size: 20px; padding: 0 4px; }
+.pipe-out b { color: var(--code-str); }
+
+/* ---------- sections ---------- */
+section.chapter { padding-top: 34px; }
+section.chapter > h2 {
+  font-size: clamp(26px, 3.4vw, 32px);
+  line-height: 1.2;
+  margin: 0 0 16px;
+  letter-spacing: -.01em;
+  display: flex; gap: 14px; align-items: baseline;
+}
+section.chapter > h2 .sec-no { color: var(--accent); font-variant-numeric: tabular-nums; }
+h3 { font-size: 21px; margin: 32px 0 10px; line-height: 1.3; }
+p { margin: 0 0 14px; max-width: 72ch; }
+.source {
+  font-size: 14.5px; color: var(--muted);
+  border-top: 1px dashed var(--line);
+  padding-top: 10px; margin: 18px 0 8px;
+}
+.source strong { color: var(--ink); font-weight: 600; }
+.stage { font-weight: 600; color: var(--ink); }
+
+/* ---------- callouts ---------- */
+.callout {
+  border-left: 4px solid var(--imp);
+  background: var(--imp-soft);
+  padding: 12px 16px;
+  border-radius: 0 10px 10px 0;
+  margin: 18px 0;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout .c-title { display: block; font-weight: 700; margin-bottom: 4px; }
+.callout.err { border-color: var(--err); background: var(--err-soft); }
+.callout.err .c-title { color: var(--err); }
+.callout.tip { border-color: var(--tip); background: var(--tip-soft); }
+.callout.tip .c-title { color: var(--tip); }
+.callout.imp .c-title { color: var(--imp); }
+.callout.ver { border-color: var(--accent); background: var(--accent-soft); }
+.callout.ver .c-title { color: var(--accent); }
+
+/* ---------- code ---------- */
+.codebox { background: var(--code-bg); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+.codebar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--code-bar); padding: 6px 8px 6px 14px;
+  color: var(--code-muted); font: 500 13px var(--font-code);
+}
+.copy-btn {
+  font: 600 12.5px var(--font-text); color: var(--code-ink);
+  background: transparent; border: 1px solid #33466D; border-radius: 6px;
+  padding: 4px 10px; cursor: pointer;
+}
+.copy-btn:hover { border-color: var(--code-kw); }
+.codebox pre {
+  margin: 0; padding: 12px 0; overflow-x: auto;
+  font: 14px/1.6 var(--font-code); color: var(--code-ink);
+}
+.codebox code { background: none; padding: 0; font-size: inherit; border-radius: 0; }
+.ln { display: block; padding: 0 16px 0 0; min-width: max-content; }
+.ln .no { display: inline-block; width: 3.2em; padding-right: 1.1em; text-align: right; color: #4D5E80; user-select: none; }
+.ln.active { background: var(--code-active); box-shadow: inset 3px 0 0 var(--code-kw); }
+.ln.changed .tx { background: rgba(255,154,77,.14); border-radius: 3px; }
+.plain .ln .no { display: none; }
+.plain .ln { padding-left: 16px; }
+.t-kw { color: var(--code-kw); }
+.t-type { color: var(--code-type); }
+.t-str { color: var(--code-str); }
+.t-num { color: var(--code-num); }
+.t-com { color: var(--code-com); font-style: italic; }
+.t-prompt { color: var(--code-muted); user-select: none; }
+
+/* ---------- interactive panels ---------- */
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 16px; margin: 20px 0; box-shadow: var(--shadow);
+}
+.panel > h4 { margin: 0 0 6px; font-size: 17px; }
+.panel .intro { color: var(--muted); font-size: 15.5px; margin-bottom: 8px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.btn {
+  font: 600 14.5px var(--font-text);
+  border-radius: 8px; padding: 8px 14px; cursor: pointer;
+  border: 1.5px solid var(--navy); background: var(--surface); color: var(--ink);
+}
+:root[data-theme="dark"] .btn { border-color: #4A6598; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn { border-color: #4A6598; } }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
+:root[data-theme="dark"] .btn.primary { color: #1A1206; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #1A1206; } }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.trace-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+.state { background: var(--surface-2); border-radius: 10px; padding: 12px 14px; font-size: 15px; }
+.state h5 { margin: 10px 0 4px; font-size: 13.5px; color: var(--muted); font-weight: 600; }
+.state h5:first-child { margin-top: 0; }
+.var-list { margin: 0; padding: 0; list-style: none; font-family: var(--font-code); font-size: 13.5px; }
+.var-list li { padding: 3px 0; border-bottom: 1px dashed var(--line); overflow-wrap: anywhere; }
+.var-list li:last-child { border-bottom: 0; }
+.var-list .vn { color: var(--accent); font-weight: 600; }
+.console {
+  background: var(--code-bg); color: var(--code-str);
+  font: 13.5px/1.55 var(--font-code); border-radius: 8px; padding: 8px 10px;
+  min-height: 2.2em; white-space: pre; overflow-x: auto;
+}
+.console.err-out { color: #FF9C94; }
+.step-note { margin-top: 10px; font-size: 14.5px; line-height: 1.5; }
+.step-count { font-size: 13.5px; color: var(--muted); align-self: center; margin-left: auto; }
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 14.5px; font-weight: 600; }
+.field input, .answer-box {
+  font: 15px var(--font-code); color: var(--ink); background: var(--surface-2);
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 8px 10px; width: 100%;
+}
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 10px 0; }
+.hint-text { font-size: 13.5px; color: var(--muted); font-weight: 400; }
+.msg { font-size: 14.5px; margin-top: 6px; }
+.msg.bad { color: var(--err); }
+.reveal { margin-top: 12px; }
+.reveal[hidden] { display: none; }
+.answer-box { min-height: 80px; resize: vertical; }
+.verdict { font-weight: 600; margin: 8px 0; }
+.verdict.good { color: var(--ok); }
+.verdict.close { color: var(--accent); }
+
+/* ---------- mini task ---------- */
+.task { border: 2px solid var(--accent); border-radius: 14px; padding: 18px; background: var(--surface); }
+
+/* ---------- quiz ---------- */
+.quiz-q { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin: 16px 0; }
+.quiz-q h4 { margin: 0 0 8px; font-size: 16.5px; line-height: 1.45; }
+.quiz-q .qn { color: var(--accent); margin-right: 6px; }
+.opts { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.opt {
+  text-align: left; font: 15px/1.45 var(--font-text); color: var(--ink);
+  background: var(--surface-2); border: 1.5px solid var(--line); border-radius: 10px;
+  padding: 10px 12px; cursor: pointer;
+}
+.opt code { background: transparent; padding: 0; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt.tried { border-color: var(--err); opacity: .8; }
+.opt.right { border-color: var(--ok); background: var(--tip-soft); }
+.opt:disabled { cursor: default; }
+.fb { margin-top: 10px; padding: 10px 12px; border-radius: 10px; font-size: 15px; }
+.fb.good { background: var(--tip-soft); }
+.fb.think { background: var(--accent-soft); }
+.fb p { margin: 0 0 6px; }
+.fb p:last-child { margin: 0; }
+.score {
+  background: var(--navy); color: var(--navy-ink); border-radius: 14px; padding: 18px; margin: 18px 0;
+}
+.score strong { font-size: 26px; color: var(--accent); }
+.score .btn { background: transparent; color: var(--navy-ink); border-color: var(--accent); }
+
+.sources-list { padding-left: 20px; }
+.sources-list li { margin-bottom: 6px; overflow-wrap: anywhere; }
+footer.page-foot { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); margin-top: 40px; padding-top: 16px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 980px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .toc {
+    position: fixed; z-index: 70;
+    top: 0; left: 0; bottom: 0;
+    width: min(320px, 86vw); max-height: none;
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    padding: calc(env(safe-area-inset-top, 0px) + 16px) 12px calc(env(safe-area-inset-bottom, 0px) + 24px) 16px;
+    transform: translateX(-105%);
+    transition: transform .22s ease;
+    visibility: hidden;
+  }
+  body.toc-is-open .toc { transform: none; visibility: visible; }
+  .toc-close {
+    display: inline-flex; font: 600 14px var(--font-text); color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 5px 10px; cursor: pointer;
+  }
+  .toc-overlay {
+    position: fixed; inset: 0; z-index: 60; background: rgba(8, 15, 30, .45);
+  }
+  body.toc-is-open .toc-overlay { display: block; }
+  .toc-open {
+    display: inline-flex; align-items: center; gap: 6px;
+    font: 600 14px var(--font-text); color: var(--navy-ink);
+    background: transparent; border: 1.5px solid rgba(255,255,255,.45); border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; flex-shrink: 0;
+  }
+  .trace-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .header-inner { padding: 10px 14px; }
+  .brand strong { font-size: 16px; }
+  .theme-toggle .label { display: none; }
+  .layout { padding: 0 14px 60px; }
+  .codebox pre { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <button type="button" class="toc-open" id="tocOpen" aria-controls="toc" aria-expanded="false">
+      <span aria-hidden="true">☰</span><span>Зміст</span>
+    </button>
+    <div class="brand">
+      <small>Java Fundamentals</small>
+      <strong>Тема 01. Java Introduction</strong>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">
+      <span class="icon" aria-hidden="true">◐</span>
+      <span class="label">Темна тема</span>
+    </button>
+  </div>
+  <div class="progress" role="progressbar" aria-label="Прогрес читання" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progressBar"></span></div>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="Зміст теми">
+    <div class="toc-head">
+      <h2>Зміст теми</h2>
+      <button type="button" class="toc-close" id="tocClose">Закрити</button>
+    </div>
+    <ol id="tocList"></ol>
+  </nav>
+  <div class="toc-overlay" id="tocOverlay" hidden></div>
+
+  <main id="main">
+    <div class="hero">
+      <h1>Тема <span class="num">01</span>. Java Introduction</h1>
+      <p class="lead">Від текстового файлу до працюючої програми: що встановити, як Java знаходить точку входу, які бувають типи даних і навіщо класам пакети.</p>
+      <div class="pipeline" aria-label="Шлях Java-програми від вихідного коду до виконання">
+        <div class="pipe-step"><b>Greeter.java</b><span>вихідний код</span></div>
+        <div class="pipe-arrow" aria-hidden="true">›</div>
+        <div class="pipe-step tool"><b>javac</b><span>компілятор</span></div>
+        <div class="pipe-arrow" aria-hidden="true">›</div>
+        <div class="pipe-step"><b>Greeter.class</b><span>байткод</span></div>
+        <div class="pipe-arrow" aria-hidden="true">›</div>
+        <div class="pipe-step tool"><b>java</b><span>лаунчер + JVM</span></div>
+        <div class="pipe-arrow" aria-hidden="true">›</div>
+        <div class="pipe-step pipe-out"><b>Hello, Java!</b><span>результат</span></div>
+      </div>
+    </div>
+
+    <!-- ===================== ЦІЛІ ===================== -->
+    <section class="chapter" id="goals" data-toc="Цілі теми">
+      <h2><span class="sec-no">0</span>Цілі теми</h2>
+      <p>Після цієї теми ви зможете пояснити, як вихідний код Java перетворюється на байткод і хто саме його виконує, а також чим JDK відрізняється від JVM. Ви встановите JDK поточної LTS-версії (Java 25), перевірите середовище командами <code>java -version</code> і <code>javac -version</code> та усвідомлено оберете інструмент: командний рядок, JShell чи IDE. Ви розумітимете, чому метод <code>main</code> має саме таку сигнатуру і як програма отримує аргументи командного рядка. Ви розрізнятимете вісім примітивних типів і посилальні типи та зможете передбачити результат цілочисельного ділення, переповнення й порівняння посилань. І нарешті, ви розкладете класи по пакетах, скомпілюєте й запустите свою першу програму з командного рядка.</p>
+    </section>
+
+    <!-- ===================== 1. ЯК ПРАЦЮЄ ===================== -->
+    <section class="chapter" id="how-java-runs" data-toc="Як виконується Java-програма">
+      <h2><span class="sec-no">1</span>Як виконується Java-програма</h2>
+      <p><span class="stage">Проблема.</span> Програму ми пишемо звичайним текстом, а процесор розуміє лише двійкові інструкції. Ба більше, процесори й операційні системи різні: те, що зібрано для Windows на x64, не запуститься на macOS з ARM-процесором. Мовам на кшталт C доводиться компілювати програму окремо під кожну платформу.</p>
+      <p><span class="stage">Чому Java робить інакше.</span> Java розділяє шлях програми на два кроки. Спершу компілятор <code>javac</code> перевіряє вихідний код і перетворює файл <code>.java</code> на файл <code>.class</code>. У ньому не машинний код конкретного процесора, а <em>байткод</em> — проміжний формат, який людина вже не читає, але й до «заліза» він ще не прив’язаний. Потім лаунчер <code>java</code> запускає віртуальну машину Java (JVM), і саме вона виконує байткод на вашій платформі.</p>
+      <p><span class="stage">Рішення.</span> Отже, ви компілюєте один раз, а отриманий <code>.class</code> виконується всюди, де встановлена JVM. Якщо в коді є помилка, компілятор не створить <code>.class</code>-файл узагалі, тому багато проблем ви побачите ще до запуску.</p>
+      <p><span class="stage">Коли це застосовувати.</span> Завжди: це базовий цикл будь-якої Java-програми. IDE виконує ті самі два кроки автоматично, коли ви натискаєте «Run», тому розуміння цього циклу допомагає читати помилки, навіть якщо ви ніколи не набираєте <code>javac</code> вручну.</p>
+      <div class="callout ver">
+        <span class="c-title">Відмінності між версіями</span>
+        <p>Починаючи з Java SE 11, маленьку програму можна запустити одним кроком — <code>java Greeter.java</code>: лаунчер скомпілює її в пам’яті й одразу виконає, не створюючи <code>.class</code>-файл. З Java SE 22 так можна запускати програму, розкладену по кількох файлах. Для навчання ми все одно спершу розбираємо два окремі кроки, бо саме так працюють збирачі проєктів та IDE.</p>
+      </div>
+      <p class="source"><strong>Джерело:</strong> <a href="https://dev.java/learn/first-steps/first-java-code/getting-started/#compiling-executing-cycle" target="_blank" rel="noopener">dev.java — Getting Started with Java: The Compilation and Execution Cycle</a>; <a href="https://dev.java/learn/first-steps/first-java-code/launch-simple-source-code-programs/" target="_blank" rel="noopener">dev.java — Launching Simple Source-Code Programs</a></p>
+    </section>
+
+    <!-- ===================== 2. JDK ===================== -->
+    <section class="chapter" id="jdk" data-toc="JDK: що всередині">
+      <h2><span class="sec-no">2</span>JDK: що всередині і яку версію брати</h2>
+      <p><span class="stage">Проблема.</span> Фраза «встановіть Java» звучить однозначно, але новачок швидко натрапляє на кілька абревіатур: JDK, JRE, JVM. Легко встановити не те й потім дивуватися, чому немає компілятора.</p>
+      <p><span class="stage">Чому так.</span> Історично існували два пакети. JRE (Java Runtime Environment) містив лише те, що потрібно для <em>запуску</em> готових програм, а JDK (Java Development Kit) — ще й інструменти для їх <em>створення</em>. Сьогодні окремий JRE ні OpenJDK, ні Oracle більше не поширюють, тож «завантажити Java» означає завантажити JDK. JVM — це не окремий продукт для завантаження, а частина JDK, яка виконує байткод.</p>
+      <p><span class="stage">Рішення.</span> Встановлюємо JDK. У його теці <code>bin</code> лежать інструменти, з якими ми працюватимемо в цій темі: компілятор <code>javac</code>, лаунчер <code>java</code>, інтерактивна оболонка <code>jshell</code>, генератор документації <code>javadoc</code> та архіватор <code>jar</code>. Разом з інструментами JDK містить стандартну бібліотеку класів — Java SE API, — з якої ми вже в першій програмі візьмемо <code>String</code> і <code>System</code>.</p>
+      <p><span class="stage">Яку версію обрати.</span> Нові версії Java виходять регулярно, але частина з них має статус LTS (Long-Term Support) і підтримується значно довше. Станом на кінець вересня 2026 року найновішим випуском є Java 27, а поточною LTS-версією — Java 25. Для курсу беремо саме Java 25: код і документація, на які ми посилаємося, відповідають цій версії, а довга підтримка означає, що встановлене зараз середовище прослужить вам увесь курс.</p>
+      <div class="callout tip">
+        <span class="c-title">Порада</span>
+        <p>Домовтеся в групі про одну версію JDK. Коли у викладача Java 25, а у студента Java 17, приклади з новими можливостями мови просто не скомпілюються, і час піде на пошук «помилки», якої в коді немає.</p>
+      </div>
+      <p class="source"><strong>Джерело:</strong> <a href="https://dev.java/learn/first-steps/first-java-code/getting-started/#first-execution" target="_blank" rel="noopener">dev.java — Getting Started with Java: Preparing the Execution of Your First Program</a>; <a href="https://docs.oracle.com/en/java/javase/25/docs/specs/man/index.html" target="_blank" rel="noopener">Java SE 25 — JDK Tool Specifications</a></p>
+    </section>
+
+    <!-- ===================== 3. СЕРЕДОВИЩЕ ===================== -->
+    <section class="chapter" id="environment" data-toc="Середовище й інструменти">
+      <h2><span class="sec-no">3</span>Середовище та інструменти розробки</h2>
+      <p><span class="stage">Проблема.</span> JDK встановлено, але команда <code>javac</code> у терміналі каже, що її не знайдено. Операційна система не шукає програми по всьому диску — вона дивиться лише в теки, перелічені у змінній середовища <code>PATH</code>.</p>
+      <p><span class="stage">Рішення.</span> Створюємо змінну <code>JAVA_HOME</code>, яка вказує на теку з JDK, і додаємо її підтеку <code>bin</code> до <code>PATH</code>. Команди нижче діють лише в поточному вікні терміналу — це зручно для першої перевірки. Щоб налаштування зберігалися постійно, їх задають у параметрах системи або в профілі оболонки.</p>
+      <div data-code="envWindows"></div>
+      <div data-code="envUnix"></div>
+      <p>Після цього обидві команди мають вивести номер версії. Якщо <code>java -version</code> працює, а <code>javac -version</code> ні, найчастіше у <code>PATH</code> потрапила не тека JDK, а якась інша встановлена Java.</p>
+      <div class="callout err">
+        <span class="c-title">Типова помилка</span>
+        <p>Пробіл зайвий або пропущена крапка з комою в <code>PATH</code> — і Windows уже не знаходить <code>javac</code>. Чому: <code>PATH</code> — це рядок, де теки розділено символом <code>;</code> (у Linux і macOS — <code>:</code>), і система читає його буквально. Перевіряйте результат командою <code>echo %PATH%</code> або <code>echo $PATH</code>.</p>
+      </div>
+
+      <h3 id="jshell">JShell: швидкі експерименти</h3>
+      <p><span class="stage">Проблема.</span> Щоб перевірити, скільки буде <code>7 / 2</code>, не хочеться створювати клас, метод <code>main</code> і компілювати файл. <span class="stage">Рішення.</span> JShell — інструмент JDK, що працює за принципом REPL (read-eval-print loop): ви вводите вираз чи оголошення, і він одразу показує результат. <span class="stage">Коли застосовувати.</span> Для перевірки окремих виразів і коротких ідей; повноцінні програми з пакетами все одно пишемо у файлах.</p>
+      <div data-code="jshellDemo"></div>
+      <p>Тут <code>$1</code> — це змінна, яку JShell створив сам, щоб зберегти результат виразу.</p>
+
+      <h3 id="ide">IDE</h3>
+      <p>Для великих проєктів розробники використовують інтегровані середовища розробки (IDE): вони самі компілюють код, підсвічують помилки ще під час набору та допомагають налагоджувати програму. Документація dev.java згадує безкоштовні IntelliJ IDEA, Eclipse і NetBeans. У курсі ви можете користуватися будь-якою з них, але першу програму варто скомпілювати й запустити саме з терміналу: так ви побачите кроки, які IDE потім виконуватиме замість вас.</p>
+      <p class="source"><strong>Джерело:</strong> <a href="https://dev.java/learn/first-steps/first-java-code/getting-started/#setting-up-jdk" target="_blank" rel="noopener">dev.java — Getting Started with Java: Setting up a Java Development Kit</a>; <a href="https://dev.java/learn/first-steps/first-java-code/jshell-tool/" target="_blank" rel="noopener">dev.java — JShell, the Java Shell Tool</a>; <a href="https://dev.java/learn/first-steps/first-java-code/getting-started/#going-further" target="_blank" rel="noopener">dev.java — Getting Started with Java: Going Further</a></p>
+    </section>
+
+    <!-- ===================== 4. ТОЧКА ВХОДУ ===================== -->
+    <section class="chapter" id="entry-point" data-toc="Точка входу: main">
+      <h2><span class="sec-no">4</span>Точка входу в програму</h2>
+      <p><span class="stage">Проблема.</span> У програмі можуть бути десятки класів і сотні методів. Коли ви пишете <code>java HelloWorld</code>, JVM має якось вирішити, з якого саме рядка почати.</p>
+      <p><span class="stage">Чому так.</span> Java домовляється про це раз і назавжди: лаунчер завантажує вказаний клас, готує його до роботи й викликає в ньому метод <code>main</code>. Кожне слово класичної сигнатури пояснює, <em>як</em> JVM має до нього достукатися. Модифікатор <code>public</code> означає, що метод доступний ззовні класу, — а лаунчер якраз ззовні. Слово <code>static</code> означає, що метод належить класу, а не окремому об’єкту, тож його можна викликати, нічого не створюючи. Тип <code>void</code> каже, що метод нічого не повертає. А параметр <code>String[] args</code> — це масив рядків, у який лаунчер кладе аргументи командного рядка.</p>
+      <p><span class="stage">Рішення.</span> Ми пишемо <code>public static void main(String[] args)</code> і розміщуємо інструкції програми всередині фігурних дужок цього методу. Вони виконуються згори донизу, рядок за рядком. Як оголошувати власні методи, ви дізнаєтеся в окремій темі; поки що нам достатньо одного — <code>main</code>, а готові методи стандартної бібліотеки, як-от <code>System.out.println</code>, ми лише викликаємо.</p>
+      <div data-code="hello"></div>
+      <p><span class="stage">Коли застосовувати.</span> У кожній програмі, яку запускаєте командою <code>java</code>. Клас без <code>main</code> скомпілюється нормально, але запустити його лаунчер відмовиться — він просто не знайде, з чого почати.</p>
+      <div class="callout ver">
+        <span class="c-title">Java 25: нові форми main</span>
+        <p>У Java 25 лаунчер розпізнає й простіші варіанти: <code>main</code> без параметрів і без <code>static</code>, а також «компактні» файли, де метод можна написати без оголошення класу, а друкувати через клас <code>IO</code>. Вони створені для перших кроків у мові, але в старіших версіях не компілюються, і в робочих проєктах ви бачитимете класичну форму. Тому в курсі використовуємо саме її; компактну форму показуємо лише для впізнавання:</p>
+      </div>
+      <div data-code="compact"></div>
+      <div class="callout err">
+        <span class="c-title">Типова помилка</span>
+        <p>Метод названо <code>Main</code> або параметр оголошено як <code>String args</code>. Компілятор мовчить — це цілком законні методи, — але лаунчер шукає метод саме з іменем <code>main</code> і параметром-масивом, тож програма не стартує. Java чутлива до регістру: <code>Main</code> і <code>main</code> для неї різні імена.</p>
+      </div>
+      <p class="source"><strong>Джерело:</strong> <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-12.html#jls-12.1.4" target="_blank" rel="noopener">JLS SE 25, §12.1.4 (Java Virtual Machine Startup)</a>; <a href="https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html" target="_blank" rel="noopener">Java SE 25 — The java Command</a>; <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IO.html" target="_blank" rel="noopener">Java SE 25 API — java.lang.IO</a></p>
+    </section>
+
+    <!-- ===================== 5. ТИПИ ДАНИХ ===================== -->
+    <section class="chapter" id="data-types" data-toc="Типи даних">
+      <h2><span class="sec-no">5</span>Типи даних: примітиви та посилання</h2>
+
+      <h3 id="static-typing">Навіщо змінній тип</h3>
+      <p><span class="stage">Проблема.</span> Програма зберігає значення в пам’яті, і, щоб правильно з ними працювати, треба знати, що саме там лежить: ціле число, дробове, символ чи текст. Якщо дізнаватися про це лише під час виконання, помилку «додали текст до числа» можна виявити занадто пізно.</p>
+      <p><span class="stage">Чому так.</span> Java — мова зі статичною типізацією: кожну змінну треба оголосити разом із типом до першого використання. Тип визначає, які значення змінна може містити і які операції над ними дозволені. Компілятор перевіряє це ще до запуску.</p>
+      <p><span class="stage">Рішення і коли застосовувати.</span> Оголошуючи змінну, ми обираємо тип, що точно описує дані: кількість — <code>int</code>, прапорець — <code>boolean</code>, текст — <code>String</code>. Усі типи Java поділено на дві великі групи — примітивні та посилальні, — і різниця між ними визначає, що саме зберігається у змінній.</p>
+
+      <h3 id="primitives">Вісім примітивних типів</h3>
+      <p>Примітивний тип визначено самою мовою, і його назва — зарезервоване ключове слово. Змінна примітивного типу містить саме значення, і дві такі змінні ніколи не ділять спільного стану між собою.</p>
+      <p>Чотири типи зберігають цілі числа й відрізняються лише розміром. <code>byte</code> займає 8 біт і вміщує значення від −128 до 127; <code>short</code> — 16 біт, від −32 768 до 32 767; <code>int</code> — 32 біти, від −2 147 483 648 до 2 147 483 647; <code>long</code> — 64 біти для справді великих чисел. За замовчуванням для цілих чисел використовуємо <code>int</code>, а <code>long</code> — коли діапазону <code>int</code> може забракнути, як-от для мілісекунд чи великих лічильників.</p>
+      <p>Два типи зберігають числа з плаваючою крапкою: <code>float</code> (32 біти) і <code>double</code> (64 біти). Звичайний вибір — <code>double</code>. Обидва типи зберігають значення наближено, тож для точних грошових розрахунків вони не підходять — цю тему розберемо пізніше.</p>
+      <p>Тип <code>char</code> займає 16 біт і зберігає одну кодову одиницю UTF-16 — фактично символ, записаний в одинарних лапках: <code>'A'</code>. Важливо, що <code>char</code> у Java — це числовий тип без знака: у виразах з арифметикою символ поводиться як його числовий код. Нарешті, <code>boolean</code> має рівно два значення — <code>true</code> і <code>false</code> — і з числами не змішується.</p>
+
+      <h3 id="literals">Літерали та значення за замовчуванням</h3>
+      <p><span class="stage">Проблема.</span> Число 3000000000 не вміщується в <code>int</code>. Якщо просто написати <code>long big = 3000000000;</code>, компілятор відмовиться — і це дивує новачків, адже тип змінної <code>long</code>.</p>
+      <p><span class="stage">Чому так.</span> Цілий літерал без суфікса завжди має тип <code>int</code>, незалежно від того, куди його присвоюють. Компілятор перевіряє сам літерал ще до присвоєння.</p>
+      <p><span class="stage">Рішення.</span> Для <code>long</code>-літерала додаємо суфікс <code>L</code>: <code>3000000000L</code> (велика літера, бо мала <code>l</code> легко плутається з одиницею). Для <code>float</code> — суфікс <code>f</code>: <code>2.5f</code>. Довгі числа можна розбивати підкресленнями для читабельності: <code>3_000_125</code> — це те саме, що <code>3000125</code>.</p>
+      <p><span class="stage">Коли це важливо.</span> Поля класу, які ви не ініціалізували, отримують значення за замовчуванням: <code>0</code> для чисел, <code>false</code> для <code>boolean</code>, <code>'\u0000'</code> для <code>char</code> і <code>null</code> для посилань. Але локальні змінні всередині методу такого значення <em>не</em> отримують: читання неприсвоєної локальної змінної — це помилка компіляції <code>variable count might not have been initialized</code>. Так Java захищає від випадкових «сміттєвих» значень.</p>
+      <p class="source"><strong>Джерело:</strong> <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2" target="_blank" rel="noopener">JLS SE 25, §4.2 — Primitive Types and Values</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.1" target="_blank" rel="noopener">JLS SE 25, §3.10.1 — Integer Literals</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.12.5" target="_blank" rel="noopener">JLS SE 25, §4.12.5 — Initial Values of Variables</a>; <a href="https://dev.java/learn/language-basics/primitive-types/" target="_blank" rel="noopener">dev.java — Creating Primitive Type Variables in Your Programs</a></p>
+
+      <h3 id="int-arithmetic">Цілочисельна арифметика: ділення та переповнення</h3>
+      <p><span class="stage">Проблема.</span> Студент очікує, що <code>7 / 2</code> дасть <code>3.5</code>, а <code>2147483647 + 1</code> — <code>2147483648</code>. Java друкує <code>3</code> і <code>-2147483648</code>, і жодної помилки не повідомляє.</p>
+      <p><span class="stage">Чому так.</span> Коли обидва операнди цілі, результат теж цілий: ділення відкидає дробову частину, округлюючи в бік нуля. Остача <code>%</code> має знак діленого. А при переповненні цілочисельні оператори не кидають винятків — значення просто «загортається» по колу в межах 32 біт. Єдиний виняток у цілочисельній арифметиці — ділення (або остача) на нуль, яке кидає <code>ArithmeticException</code>.</p>
+      <p><span class="stage">Рішення.</span> Якщо потрібен дробовий результат, хоча б один операнд має бути дробовим (<code>7.0 / 2</code>). Якщо результат може вийти за межі <code>int</code>, обчислюємо в <code>long</code>. <span class="stage">Коли застосовувати:</span> щоразу, коли ділите цілі числа або множите великі значення — секунди на мілісекунди, кількість на ціну в копійках.</p>
+
+      <div class="panel" id="calcPanel">
+        <h4>Лабораторія: змініть a і b</h4>
+        <p class="intro">Сторінка перераховує вивід за правилами Java для <code>int</code> і <code>long</code>. Спробуйте <code>b = 0</code>, від’ємні числа та <code>a = -2147483648</code>, <code>b = -1</code>.</p>
+        <div class="fields">
+          <label class="field">a (int)<input id="calcA" type="text" inputmode="numeric" value="2147483647" autocomplete="off"></label>
+          <label class="field">b (int)<input id="calcB" type="text" inputmode="numeric" value="1" autocomplete="off"></label>
+        </div>
+        <div class="msg bad" id="calcMsg" role="status"></div>
+        <div data-code="intArith" id="intArithBox"></div>
+        <h5 style="margin:6px 0 4px;font-size:14px;color:var(--muted)">Вивід програми</h5>
+        <div class="console" id="calcOut" aria-live="polite"></div>
+      </div>
+
+      <div class="panel" data-predict="division">
+        <h4>Що буде виведено?</h4>
+        <p class="intro">Обидві змінні отримують результат того самого ділення, але мають різні типи. Запишіть обидва рядки виводу.</p>
+        <div data-code="division"></div>
+      </div>
+
+      <div class="panel" data-predict="charMath">
+        <h4>Що буде виведено?</h4>
+        <p class="intro">Символи теж беруть участь в арифметиці. Запишіть три рядки виводу.</p>
+        <div data-code="charMath"></div>
+      </div>
+      <p class="source"><strong>Джерело:</strong> <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2.2" target="_blank" rel="noopener">JLS SE 25, §4.2.2 — Integer Operations</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.17.2" target="_blank" rel="noopener">JLS SE 25, §15.17.2 — Division Operator /</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18" target="_blank" rel="noopener">JLS SE 25, §15.18 — Additive Operators</a></p>
+
+      <h3 id="references">Посилальні типи</h3>
+      <p><span class="stage">Проблема.</span> Рядок, список чи будь-який інший складний об’єкт може займати багато пам’яті. Якби кожне присвоєння копіювало весь об’єкт, програма працювала б повільно й не змогла б поділитися одним об’єктом між різними частинами коду.</p>
+      <p><span class="stage">Чому так.</span> Тому для класів (і масивів) Java використовує посилальні типи. Об’єкт створюється окремо — наприклад, виразом <code>new StringBuilder("Hi")</code>, — а змінна зберігає лише <em>посилання</em> на нього, тобто «адресу», за якою об’єкт можна знайти. Коли ви присвоюєте таку змінну іншій, копіюється посилання, а не об’єкт. На один об’єкт може вказувати кілька змінних, і зміна через одну з них видна через усі інші. Особливе значення <code>null</code> означає «посилання нікуди не вказує».</p>
+      <p><span class="stage">Рішення.</span> Думайте про посилальну змінну як про ярлик на об’єкті, а не як про сам об’єкт. Оператор <code>==</code> для посилань порівнює саме ярлики: чи вказують вони на той самий об’єкт. Щоб порівняти <em>вміст</em> рядків, використовуйте метод <code>equals</code>.</p>
+      <p><span class="stage">Коли застосовувати.</span> Будь-яка змінна, тип якої — клас (<code>String</code>, <code>StringBuilder</code>, <code>Scanner</code>…) або масив (<code>String[] args</code>), є посилальною. Примітивних типів лише вісім, і вони пишуться з малої літери; все інше — посилання.</p>
+
+      <div class="panel" data-trace="valueRef">
+        <h4>Трасування: значення проти посилання</h4>
+        <p class="intro">Натискайте «Крок вперед». Підсвічено рядок, який щойно виконався; праворуч — стан після нього.</p>
+      </div>
+      <p>Зверніть увагу на різницю. Присвоєння <code>int copy = score</code> скопіювало <em>значення</em> 10, тому зміна <code>copy</code> ніяк не вплинула на <code>score</code>. Присвоєння <code>alias = message</code> теж щось скопіювало, але це було <em>посилання</em> — і через <code>alias</code> ми змінили той самий об’єкт, на який вказує <code>message</code>. Тому обидва друкуються як <code>Hi!</code>, а <code>message == alias</code> дає <code>true</code>: це один об’єкт.</p>
+      <div class="callout err">
+        <span class="c-title">Типова помилка</span>
+        <p>Порівнювати рядки через <code>==</code>. Іноді це «працює», бо однакові рядкові літерали у програмі можуть вказувати на один і той самий об’єкт, — і саме тому помилка підступна: рядок, прочитаний із клавіатури чи файлу, буде іншим об’єктом з тим самим вмістом, і <code>==</code> раптом дасть <code>false</code>. Для вмісту завжди <code>first.equals(second)</code>.</p>
+      </div>
+      <p class="source"><strong>Джерело:</strong> <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.3.1" target="_blank" rel="noopener">JLS SE 25, §4.3.1 — Objects</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.21.3" target="_blank" rel="noopener">JLS SE 25, §15.21.3 — Reference Equality Operators == and !=</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.5" target="_blank" rel="noopener">JLS SE 25, §3.10.5 — String Literals</a>; <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#equals(java.lang.Object)" target="_blank" rel="noopener">Java SE 25 API — String.equals</a></p>
+    </section>
+
+    <!-- ===================== 6. ПАКЕТИ ===================== -->
+    <section class="chapter" id="packages" data-toc="Пакети">
+      <h2><span class="sec-no">6</span>Пакети в Java: вступ</h2>
+      <p><span class="stage">Проблема.</span> Поки програма складається з одного класу, все просто. Але в реальному проєкті сотні класів, і рано чи пізно двоє розробників назвуть свої класи однаково — скажімо, <code>Report</code>. До того ж у теці з сотнею файлів неможливо зорієнтуватися.</p>
+      <p><span class="stage">Чому так.</span> Пакет — це простір імен, що групує пов’язані класи. Повне ім’я класу складається з імені пакета та імені класу: <code>com.example.intro.Greeter</code>. Два класи <code>Report</code> у різних пакетах мають різні повні імена, тож конфлікту немає. Щоб імена пакетів у світі не перетиналися, їх за домовленістю будують від перевернутого доменного імені організації: <code>com.example</code>.</p>
+      <p><span class="stage">Рішення.</span> Першим рядком файлу (до нього можуть бути лише коментарі) пишемо оголошення <code>package</code>. Структура тек повторює ім’я пакета: класи пакета <code>com.example.intro</code> лежать у теці <code>com/example/intro</code>. Щоб використати клас з іншого пакета, або пишемо його повне ім’я, або імпортуємо клас оголошенням <code>import</code> і далі звертаємося коротким іменем. Класи пакета <code>java.lang</code> — <code>String</code>, <code>System</code>, <code>Integer</code> — імпортуються автоматично в кожен файл, тому ми ніколи не пишемо <code>import java.lang.String</code>.</p>
+      <p>Власні класи в різних пакетах ми створюватимемо в наступних темах, а принцип зручно показати на класі зі стандартної бібліотеки. Клас <code>LocalDate</code> лежить у пакеті <code>java.time</code>, тож автоматично він не імпортується. У прикладі нижче першу змінну оголошено через <code>import</code>, а другу — через повне ім’я класу. Обидва способи дають той самий тип.</p>
+      <div data-code="tree"></div>
+      <div data-code="app"></div>
+      <div data-code="appRun"></div>
+      <p>Прапорець <code>-d out</code> каже компілятору класти <code>.class</code>-файли в теку <code>out</code>, створюючи там ту саму структуру тек за пакетами. Прапорець <code>-cp out</code> (скорочення від class path) каже лаунчеру, де шукати класи. Зверніть увагу: лаунчеру передаємо повне ім’я класу через крапки, а не шлях до файлу.</p>
+      <p><span class="stage">Коли застосовувати.</span> Завжди, крім найперших експериментів в одному файлі. Клас без оголошення <code>package</code> потрапляє в безіменний пакет, і з інших пакетів його неможливо імпортувати. Для навчальних «одноразових» програм це прийнятно, для проєкту — ні.</p>
+      <div class="callout ver">
+        <span class="c-title">Відмінності між версіями</span>
+        <p>У Java 25 з’явилося оголошення <code>import module</code>, яке імпортує одразу всі пакети, експортовані модулем. Модулі — окрема велика тема, тож поки що ми імпортуємо окремі класи.</p>
+      </div>
+      <p class="source"><strong>Джерело:</strong> <a href="https://dev.java/learn/packages/" target="_blank" rel="noopener">dev.java — Packages</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html#jls-7.4" target="_blank" rel="noopener">JLS SE 25, §7.4 — Package Declarations</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html#jls-7.5" target="_blank" rel="noopener">JLS SE 25, §7.5 — Import Declarations</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-6.html#jls-6.7" target="_blank" rel="noopener">JLS SE 25, §6.7 — Fully Qualified Names</a>; <a href="https://docs.oracle.com/en/java/javase/25/docs/specs/man/javac.html" target="_blank" rel="noopener">Java SE 25 — The javac Command</a>; <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" target="_blank" rel="noopener">Java SE 25 API — java.time.LocalDate</a></p>
+    </section>
+
+    <!-- ===================== 7. ПЕРША ПРОГРАМА ===================== -->
+    <section class="chapter" id="first-program" data-toc="Моя перша програма">
+      <h2><span class="sec-no">7</span>Моя перша програма</h2>
+      <p>Зберемо все разом: пакет, клас, точка входу, змінні примітивного й посилального типу. Програма <code>Greeter</code> будує привітання й рахує, скільки аргументів командного рядка їй передали. Спершу обчислюємо значення й зберігаємо їх у змінних з промовистими іменами, а друкуємо окремими рядками наприкінці — так код легше читати й трасувати.</p>
+      <p>Спершу створіть файл <code>src/com/example/intro/Greeter.java</code>. Ім’я файлу має точно збігатися з іменем публічного класу, включно з регістром літер. Потім скомпілюйте та запустіть програму з кореня проєкту:</p>
+      <div data-code="greeterRun"></div>
+
+      <div class="panel" data-trace="greeter">
+        <h4>Трасування: запуск <code>java -cp out com.example.intro.Greeter alpha beta</code></h4>
+        <p class="intro">Лаунчер передає слова <code>alpha</code> і <code>beta</code> в масив <code>args</code>. Простежте, як змінюються змінні після кожного рядка.</p>
+      </div>
+
+      <div class="panel" id="argsPanel">
+        <h4>Спробуйте свої аргументи</h4>
+        <p class="intro">Уведіть аргументи так, як набрали б їх у терміналі. Слова, взяті в подвійні лапки, лаунчер отримує як один аргумент.</p>
+        <label class="field">Аргументи командного рядка<input id="argsInput" type="text" value="alpha beta" autocomplete="off"></label>
+        <div data-code="argsCommand" id="argsCmdBox"></div>
+        <div class="console" id="argsOut" aria-live="polite"></div>
+        <ul class="var-list" id="argsList" style="margin-top:8px"></ul>
+      </div>
+      <p>Зверніть увагу на рядок <code>"Arguments: " + count</code>. Коли один з операндів <code>+</code> — рядок, інший (тут <code>int</code>) перетворюється на рядок, і відбувається конкатенація, а не додавання.</p>
+      <p class="source"><strong>Джерело:</strong> <a href="https://dev.java/learn/first-steps/first-java-code/getting-started/#compiling-running" target="_blank" rel="noopener">dev.java — Getting Started with Java: Compiling and Running Your First Java Program</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18.1" target="_blank" rel="noopener">JLS SE 25, §15.18.1 — String Concatenation Operator +</a>; <a href="https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html" target="_blank" rel="noopener">Java SE 25 — The java Command</a></p>
+    </section>
+
+    <!-- ===================== 8. ТИПОВІ ПОМИЛКИ ===================== -->
+    <section class="chapter" id="mistakes" data-toc="Типові помилки">
+      <h2><span class="sec-no">8</span>Типові помилки та як їх уникнути</h2>
+      <p>Нижче — помилки, на які натрапляє майже кожен у перший тиждень. Для кожної важливо не лише запам’ятати правило, а й зрозуміти, чому Java поводиться саме так.</p>
+      <div class="callout err">
+        <span class="c-title">Ім’я файлу не збігається з публічним класом</span>
+        <p>Клас <code>public class Greeter</code> збережено у файлі <code>greeter.java</code> або <code>Main.java</code>. Компілятор відповідає <code>class Greeter is public, should be declared in a file named Greeter.java</code>. Чому: за публічним ім’ям компілятор і лаунчер знаходять файл класу, тож ім’я файлу — частина контракту. Як уникнути: називайте файл точно як публічний клас, з тим самим регістром.</p>
+      </div>
+      <div class="callout err">
+        <span class="c-title">Запуск з розширенням .class</span>
+        <p>Команда <code>java Greeter.class</code> не спрацює. Чому: лаунчер очікує <em>ім’я класу</em>, а не ім’я файлу; <code>.class</code> він сприймає як частину імені. Як уникнути: <code>java -cp out com.example.intro.Greeter</code> — повне ім’я класу, без розширення.</p>
+      </div>
+      <div class="callout err">
+        <span class="c-title">Клас із пакетом запускають «зсередини» теки пакета</span>
+        <p>Студент заходить у <code>out/com/example/intro</code> і виконує <code>java Greeter</code>. Чому не працює: клас насправді називається <code>com.example.intro.Greeter</code>, і лаунчер шукає його за шляхом <code>com/example/intro/Greeter.class</code> відносно class path. Як уникнути: запускайте з кореня проєкту, вказуючи <code>-cp out</code> і повне ім’я.</p>
+      </div>
+      <div class="callout err">
+        <span class="c-title">Ціле ділення там, де потрібен дріб</span>
+        <p><code>double average = total / count;</code> для <code>int total = 7</code> і <code>int count = 2</code> дає <code>3.0</code>. Чому: ділення виконується в <code>int</code>, і лише <em>готовий</em> результат <code>3</code> розширюється до <code>double</code>. Як уникнути: зробіть дробовим хоча б один операнд ще до ділення.</p>
+      </div>
+      <div class="callout err">
+        <span class="c-title">Переповнення «до» присвоєння в long</span>
+        <p><code>long millis = seconds * 1000;</code> для великого <code>int seconds</code> дає від’ємне число. Чому: тип виразу визначають операнди, а не змінна ліворуч; множення двох <code>int</code> переповнюється раніше, ніж результат потрапить у <code>long</code>. Як уникнути: <code>seconds * 1000L</code> — літерал <code>long</code> змушує обчислення відбуватися в 64 бітах. Цей випадок ви детально розберете в міні-задачі.</p>
+      </div>
+      <div class="callout err">
+        <span class="c-title">Читання неініціалізованої локальної змінної</span>
+        <p><code>int count;</code>, а потім <code>System.out.println(count + 1);</code> — не компілюється: <code>variable count might not have been initialized</code>. Чому: значення за замовчуванням отримують лише поля й елементи масивів, а локальна змінна має бути явно присвоєна до першого читання. Як уникнути: ініціалізуйте локальні змінні одразу при оголошенні.</p>
+      </div>
+      <div class="callout err">
+        <span class="c-title">Порівняння рядків через ==</span>
+        <p>Детально розібрано в розділі про посилальні типи: <code>==</code> перевіряє, чи це той самий об’єкт, а <code>equals</code> — чи однаковий вміст. Для тексту майже завжди потрібне друге.</p>
+      </div>
+      <p class="source"><strong>Джерело:</strong> <a href="https://dev.java/learn/first-steps/first-java-code/getting-started/#common-problems" target="_blank" rel="noopener">dev.java — Getting Started with Java: Common Problems and Their Solutions</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html#jls-7.6" target="_blank" rel="noopener">JLS SE 25, §7.6 — Top Level Class and Interface Declarations</a>; <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-16.html" target="_blank" rel="noopener">JLS SE 25, Chapter 16 — Definite Assignment</a></p>
+    </section>
+
+    <!-- ===================== 9. МІНІ-ЗАДАЧА ===================== -->
+    <section class="chapter" id="mini-task" data-toc="Міні-задача">
+      <h2><span class="sec-no">9</span>Міні-задача: звіт про тривалість</h2>
+      <div class="task">
+        <p><strong>Умова.</strong> Таймер повертає тривалість як ціле число секунд <code>int totalSeconds</code>. Напишіть клас <code>DurationReport</code> у пакеті <code>com.example.intro</code>, який для <code>totalSeconds = 3_000_125</code> друкує два рядки: тривалість у форматі «години h хвилини min секунди s» та загальну кількість мілісекунд.</p>
+        <p>Вимоги до структури: кожну величину обчисліть в окрему змінну з промовистим іменем (<code>hours</code>, <code>minutes</code>, <code>seconds</code>, <code>millis</code>) і підберіть для кожної відповідний тип, а друкуйте лише наприкінці, коли всі значення вже пораховано. Очікуваний вивід:</p>
+        <div data-code="taskExpected"></div>
+        <div class="btn-row">
+          <button type="button" class="btn" data-toggle="taskHint" aria-expanded="false">Показати підказку</button>
+          <button type="button" class="btn primary" data-toggle="taskSolution" aria-expanded="false">Показати рішення</button>
+        </div>
+        <div class="reveal" id="taskHint" hidden>
+          <div class="callout tip">
+            <span class="c-title">Підказка</span>
+            <p>У годині 3600 секунд, у хвилині — 60. Цілочисельне ділення <code>/</code> відповідає на питання «скільки повних одиниць», а остача <code>%</code> — «скільки лишилося». Для мілісекунд подумайте, якого типу буде вираз <code>totalSeconds * 1000</code> і чи вміститься в нього 3 000 125 000.</p>
+          </div>
+        </div>
+        <div class="reveal" id="taskSolution" hidden>
+          <div data-code="duration"></div>
+          <p><strong>Пояснення.</strong> Години — це кількість повних 3600-секундних блоків: <code>3000125 / 3600 = 833</code>. Щоб знайти хвилини, спершу беремо залишок секунд після повних годин (<code>3000125 % 3600 = 1325</code>), а вже його ділимо на 60 — виходить 22. Секунди — залишок від ділення на 60: 5. Дужки в рядку з <code>minutes</code> формально не обов’язкові, бо <code>%</code> і <code>/</code> мають однаковий пріоритет і виконуються зліва направо, але вони роблять намір очевидним.</p>
+          <p>Найцікавіше — <code>millis</code>. Змінна має тип <code>long</code>, але цього недостатньо: якщо написати <code>totalSeconds * 1000</code>, множення двох <code>int</code> переповниться <em>до</em> присвоєння, і ви отримаєте <code>-1294842296</code>. Суфікс <code>L</code> робить другий операнд <code>long</code>, тож <code>totalSeconds</code> розширюється і все множення відбувається в 64 бітах. У першому <code>println</code> ліворуч стоїть рядок <code>"Duration: "</code>, тож кожен наступний <code>+</code> — це конкатенація, і числа перетворюються на текст.</p>
+          <div class="panel" style="margin-top:14px">
+            <h4>Перевірте на інших значеннях</h4>
+            <p class="intro">Змініть кількість секунд: сторінка покаже вивід рішення та те, що надрукував би варіант без суфікса <code>L</code>.</p>
+            <label class="field">totalSeconds (int)<input id="durInput" type="text" inputmode="numeric" value="3_000_125" autocomplete="off"></label>
+            <div class="msg bad" id="durMsg" role="status"></div>
+            <h5 style="margin:10px 0 4px;font-size:14px;color:var(--muted)">Вивід рішення</h5>
+            <div class="console" id="durOut" aria-live="polite"></div>
+            <h5 style="margin:10px 0 4px;font-size:14px;color:var(--muted)">Якби було <code>long millis = totalSeconds * 1000;</code></h5>
+            <div class="console" id="durBug" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 10. КВІЗ ===================== -->
+    <section class="chapter" id="quiz" data-toc="Квіз">
+      <h2><span class="sec-no">10</span>Квіз: 10 питань</h2>
+      <p>Оберіть одну відповідь у кожному питанні. Якщо перша спроба не влучна, ви отримаєте навідне запитання і зможете спробувати ще раз, але в підсумковий бал зараховується лише перша відповідь.</p>
+      <div id="quizBox"></div>
+      <div class="score" id="quizScore" hidden></div>
+    </section>
+
+    <!-- ===================== 11. ДЖЕРЕЛА ===================== -->
+    <section class="chapter" id="sources" data-toc="Джерела">
+      <h2><span class="sec-no">11</span>Використані джерела</h2>
+      <p>Усі матеріали теми спираються на офіційну документацію Java SE 25 (поточна LTS-версія) та туторіали dev.java.</p>
+      <ol class="sources-list">
+        <li><a href="https://dev.java/learn/first-steps/first-java-code/getting-started/" target="_blank" rel="noopener">dev.java — Getting Started with Java</a></li>
+        <li><a href="https://dev.java/learn/first-steps/first-java-code/launch-simple-source-code-programs/" target="_blank" rel="noopener">dev.java — Launching Simple Source-Code Programs</a></li>
+        <li><a href="https://dev.java/learn/first-steps/first-java-code/jshell-tool/" target="_blank" rel="noopener">dev.java — JShell, the Java Shell Tool</a></li>
+        <li><a href="https://dev.java/learn/language-basics/primitive-types/" target="_blank" rel="noopener">dev.java — Creating Primitive Type Variables in Your Programs</a></li>
+        <li><a href="https://dev.java/learn/packages/" target="_blank" rel="noopener">dev.java — Packages</a></li>
+        <li><a href="https://docs.oracle.com/en/java/javase/25/docs/specs/man/index.html" target="_blank" rel="noopener">Java SE 25 — JDK Tool Specifications</a></li>
+        <li><a href="https://docs.oracle.com/en/java/javase/25/docs/specs/man/javac.html" target="_blank" rel="noopener">Java SE 25 — The javac Command</a></li>
+        <li><a href="https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html" target="_blank" rel="noopener">Java SE 25 — The java Command</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10" target="_blank" rel="noopener">JLS SE 25, §3.10 — Literals</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html" target="_blank" rel="noopener">JLS SE 25, Chapter 4 — Types, Values, and Variables</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-6.html#jls-6.7" target="_blank" rel="noopener">JLS SE 25, §6.7 — Fully Qualified Names</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html" target="_blank" rel="noopener">JLS SE 25, Chapter 7 — Packages and Modules</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-12.html#jls-12.1.4" target="_blank" rel="noopener">JLS SE 25, §12.1.4 (Java Virtual Machine Startup)</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.17.2" target="_blank" rel="noopener">JLS SE 25, §15.17.2 — Division Operator /</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18" target="_blank" rel="noopener">JLS SE 25, §15.18 — Additive Operators</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.21.3" target="_blank" rel="noopener">JLS SE 25, §15.21.3 — Reference Equality Operators</a></li>
+        <li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-16.html" target="_blank" rel="noopener">JLS SE 25, Chapter 16 — Definite Assignment</a></li>
+        <li><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" target="_blank" rel="noopener">Java SE 25 API — java.lang.String</a></li>
+        <li><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html" target="_blank" rel="noopener">Java SE 25 API — java.lang.StringBuilder</a></li>
+        <li><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IO.html" target="_blank" rel="noopener">Java SE 25 API — java.lang.IO</a></li>
+      </ol>
+      <footer class="page-foot">Java Fundamentals · Тема 01. Приклади розраховані на JDK 25.</footer>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     1. Theme toggle
+     ========================================================= */
+  var root = document.documentElement;
+  var toggle = document.getElementById("themeToggle");
+  var STORE_KEY = "java-intro-theme";
+
+  function systemDark() {
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function effectiveTheme() {
+    var t = root.getAttribute("data-theme");
+    if (t === "dark" || t === "light") return t;
+    return systemDark() ? "dark" : "light";
+  }
+  function syncToggle() {
+    var dark = effectiveTheme() === "dark";
+    toggle.setAttribute("aria-pressed", dark ? "true" : "false");
+    toggle.querySelector(".label").textContent = dark ? "Світла тема" : "Темна тема";
+    toggle.setAttribute("aria-label", dark ? "Увімкнути світлу тему" : "Увімкнути темну тему");
+  }
+  try {
+    var saved = localStorage.getItem(STORE_KEY);
+    if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+  } catch (e) { /* storage unavailable: follow system theme */ }
+  syncToggle();
+  toggle.addEventListener("click", function () {
+    var next = effectiveTheme() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem(STORE_KEY, next); } catch (e) { /* ignore */ }
+    syncToggle();
+  });
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    var onChange = function () { syncToggle(); };
+    if (mq.addEventListener) mq.addEventListener("change", onChange);
+    else if (mq.addListener) mq.addListener(onChange);
+  }
+
+  /* =========================================================
+     2. Code sources
+     ========================================================= */
+  var CODE = {
+    envWindows: { file: "Windows (cmd)", lang: "shell", text:
+"> set JAVA_HOME=C:\\jdk\\jdk-25\n" +
+"> set PATH=%JAVA_HOME%\\bin;%PATH%\n" +
+"> java -version\n" +
+"> javac -version" },
+
+    envUnix: { file: "Linux / macOS (bash, zsh)", lang: "shell", text:
+"$ export JAVA_HOME=/home/javauser/jdk/jdk-25\n" +
+"$ export PATH=$JAVA_HOME/bin:$PATH\n" +
+"$ java -version\n" +
+"$ javac -version" },
+
+    jshellDemo: { file: "jshell", lang: "shell", text:
+"$ jshell\n" +
+"jshell> 7 / 2\n" +
+"$1 ==> 3\n" +
+"\n" +
+"jshell> /exit" },
+
+    hello: { file: "HelloWorld.java", lang: "java", text:
+"public class HelloWorld {\n" +
+"\n" +
+"    public static void main(String[] args) {\n" +
+"        System.out.println(\"Hello, World!\");\n" +
+"    }\n" +
+"}" },
+
+    compact: { file: "Hello.java — компактна форма (Java 25+)", lang: "java", text:
+"void main() {\n" +
+"    IO.println(\"Hello, World!\");\n" +
+"}" },
+
+    intArith: { file: "IntArithmetic.java", lang: "java", text:
+"public class IntArithmetic {\n" +
+"\n" +
+"    public static void main(String[] args) {\n" +
+"        int a = 2147483647;\n" +
+"        int b = 1;\n" +
+"        int sum = a + b;\n" +
+"        long wideA = a;\n" +
+"        long sumAsLong = wideA + b;\n" +
+"        System.out.println(\"sum = \" + sum);\n" +
+"        System.out.println(\"sumAsLong = \" + sumAsLong);\n" +
+"        int quotient = a / b;\n" +
+"        int remainder = a % b;\n" +
+"        System.out.println(\"quotient = \" + quotient);\n" +
+"        System.out.println(\"remainder = \" + remainder);\n" +
+"    }\n" +
+"}" },
+
+    division: { file: "Division.java", lang: "java", text:
+"public class Division {\n" +
+"\n" +
+"    public static void main(String[] args) {\n" +
+"        int total = 7;\n" +
+"        int count = 2;\n" +
+"        int whole = total / count;\n" +
+"        double average = total / count;\n" +
+"        System.out.println(whole);\n" +
+"        System.out.println(average);\n" +
+"    }\n" +
+"}" },
+
+    charMath: { file: "CharMath.java", lang: "java", text:
+"public class CharMath {\n" +
+"\n" +
+"    public static void main(String[] args) {\n" +
+"        char letter = 'A';\n" +
+"        int nextCode = letter + 1;\n" +
+"        int sum = 'A' + 'B';\n" +
+"        String joined = \"\" + 'A' + 'B';\n" +
+"        System.out.println(nextCode);\n" +
+"        System.out.println(sum);\n" +
+"        System.out.println(joined);\n" +
+"    }\n" +
+"}" },
+
+    valueRef: { file: "ValueVsReference.java", lang: "java", text:
+"public class ValueVsReference {\n" +
+"\n" +
+"    public static void main(String[] args) {\n" +
+"        int score = 10;\n" +
+"        int copy = score;\n" +
+"        copy = 15;\n" +
+"        System.out.println(score + \" \" + copy);\n" +
+"\n" +
+"        StringBuilder message = new StringBuilder(\"Hi\");\n" +
+"        StringBuilder alias = message;\n" +
+"        alias.append(\"!\");\n" +
+"        System.out.println(message + \" \" + alias);\n" +
+"        System.out.println(message == alias);\n" +
+"    }\n" +
+"}" },
+
+    tree: { file: "структура проєкту", lang: "text", text:
+"project/\n" +
+"  src/\n" +
+"    com/example/intro/\n" +
+"      App.java\n" +
+"      Greeter.java\n" +
+"      DurationReport.java\n" +
+"  out/            <- сюди javac покладе .class-файли" },
+
+    app: { file: "src/com/example/intro/App.java", lang: "java", text:
+"package com.example.intro;\n" +
+"\n" +
+"import java.time.LocalDate;\n" +
+"\n" +
+"public class App {\n" +
+"\n" +
+"    public static void main(String[] args) {\n" +
+"        LocalDate start = LocalDate.of(2026, 9, 1);\n" +
+"        java.time.LocalDate end = java.time.LocalDate.of(2026, 12, 31);\n" +
+"        System.out.println(start);\n" +
+"        System.out.println(end);\n" +
+"    }\n" +
+"}" },
+
+    appRun: { file: "термінал, корінь project/", lang: "shell", text:
+"$ javac -d out src/com/example/intro/App.java\n" +
+"$ java -cp out com.example.intro.App\n" +
+"2026-09-01\n" +
+"2026-12-31" },
+
+    greeter: { file: "src/com/example/intro/Greeter.java", lang: "java", text:
+"package com.example.intro;\n" +
+"\n" +
+"public class Greeter {\n" +
+"\n" +
+"    public static void main(String[] args) {\n" +
+"        String name = \"Java\";\n" +
+"        String greeting = \"Hello, \" + name + \"!\";\n" +
+"        int count = args.length;\n" +
+"        System.out.println(greeting);\n" +
+"        System.out.println(\"Arguments: \" + count);\n" +
+"    }\n" +
+"}" },
+
+    greeterRun: { file: "термінал, корінь project/", lang: "shell", text:
+"$ javac -d out src/com/example/intro/Greeter.java\n" +
+"$ java -cp out com.example.intro.Greeter alpha beta\n" +
+"Hello, Java!\n" +
+"Arguments: 2" },
+
+    argsCommand: { file: "термінал", lang: "shell", text:
+"$ java -cp out com.example.intro.Greeter alpha beta" },
+
+    taskExpected: { file: "очікуваний вивід", lang: "text", text:
+"Duration: 833 h 22 min 5 s\n" +
+"Milliseconds: 3000125000" },
+
+    duration: { file: "src/com/example/intro/DurationReport.java", lang: "java", text:
+"package com.example.intro;\n" +
+"\n" +
+"public class DurationReport {\n" +
+"\n" +
+"    public static void main(String[] args) {\n" +
+"        int totalSeconds = 3_000_125;\n" +
+"        int hours = totalSeconds / 3600;\n" +
+"        int minutes = (totalSeconds % 3600) / 60;\n" +
+"        int seconds = totalSeconds % 60;\n" +
+"        long millis = totalSeconds * 1000L;\n" +
+"        System.out.println(\"Duration: \" + hours + \" h \" + minutes + \" min \" + seconds + \" s\");\n" +
+"        System.out.println(\"Milliseconds: \" + millis);\n" +
+"    }\n" +
+"}" }
+  };
+
+  /* =========================================================
+     3. Syntax highlighting + code blocks
+     ========================================================= */
+  var KEYWORDS = ("abstract boolean break byte case char class continue default do double else extends " +
+    "final float for if implements import int interface long new package private protected public return " +
+    "short static super switch this throw throws try void while var true false null module").split(" ");
+  var KW = {};
+  KEYWORDS.forEach(function (k) { KW[k] = true; });
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function highlightJava(line) {
+    var re = /(\/\/.*$)|("(?:\\.|[^"\\])*")|('(?:\\.|[^'\\])+')|(\b\d[\d_]*(?:\.\d+)?[LlFfDd]?\b)|(\b[A-Za-z_][A-Za-z0-9_]*\b)/g;
+    var out = "", last = 0, m;
+    while ((m = re.exec(line)) !== null) {
+      out += esc(line.slice(last, m.index));
+      if (m[1]) out += '<span class="t-com">' + esc(m[1]) + "</span>";
+      else if (m[2] || m[3]) out += '<span class="t-str">' + esc(m[0]) + "</span>";
+      else if (m[4]) out += '<span class="t-num">' + esc(m[4]) + "</span>";
+      else {
+        var w = m[5];
+        if (KW[w]) out += '<span class="t-kw">' + w + "</span>";
+        else if (/^[A-Z]/.test(w)) out += '<span class="t-type">' + w + "</span>";
+        else out += esc(w);
+      }
+      last = re.lastIndex;
+    }
+    out += esc(line.slice(last));
+    return out;
+  }
+
+  function highlightShell(line) {
+    var m = /^(\$ |> |jshell> )(.*)$/.exec(line);
+    if (m) return '<span class="t-prompt">' + esc(m[1]) + "</span>" + esc(m[2]);
+    return '<span class="t-com">' + esc(line) + "</span>";
+  }
+
+  function renderLine(lang, text) {
+    if (lang === "java") return highlightJava(text);
+    if (lang === "shell") return highlightShell(text);
+    return esc(text);
+  }
+
+  function copyText(text, btn) {
+    function done(ok) {
+      var old = "Копіювати";
+      btn.textContent = ok ? "Скопійовано" : "Не вдалося";
+      setTimeout(function () { btn.textContent = old; }, 1500);
+    }
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        done(ok);
+      } catch (e) { done(false); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+    } else { fallback(); }
+  }
+
+  /* Builds a code block and returns a controller */
+  function buildCodeBlock(host, key) {
+    var src = CODE[key];
+    var lines = src.text.split("\n");
+    var box = document.createElement("div");
+    box.className = "codebox" + (src.lang === "java" ? "" : " plain");
+    var bar = document.createElement("div");
+    bar.className = "codebar";
+    var name = document.createElement("span");
+    name.textContent = src.file;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy-btn";
+    btn.textContent = "Копіювати";
+    btn.setAttribute("aria-label", "Копіювати код: " + src.file);
+    bar.appendChild(name);
+    bar.appendChild(btn);
+    var pre = document.createElement("pre");
+    var code = document.createElement("code");
+    pre.appendChild(code);
+    box.appendChild(bar);
+    box.appendChild(pre);
+    host.appendChild(box);
+
+    var lineEls = [];
+    function draw() {
+      code.innerHTML = "";
+      lineEls = [];
+      lines.forEach(function (t, i) {
+        var ln = document.createElement("span");
+        ln.className = "ln";
+        ln.innerHTML = '<span class="no">' + (i + 1) + '</span><span class="tx">' + (renderLine(src.lang, t) || " ") + "</span>";
+        code.appendChild(ln);
+        lineEls.push(ln);
+      });
+    }
+    draw();
+    btn.addEventListener("click", function () { copyText(lines.join("\n"), btn); });
+
+    return {
+      setActive: function (n) {
+        lineEls.forEach(function (el, i) { el.classList.toggle("active", i + 1 === n); });
+        if (n) {
+          var el = lineEls[n - 1];
+          var preBox = pre;
+          var top = el.offsetTop - preBox.offsetTop;
+          if (top < preBox.scrollTop || top > preBox.scrollTop + preBox.clientHeight - 30) {
+            preBox.scrollTop = Math.max(0, top - 40);
+          }
+        }
+      },
+      setLine: function (n, text) {
+        lines[n - 1] = text;
+        var el = lineEls[n - 1];
+        el.querySelector(".tx").innerHTML = renderLine(src.lang, text) || " ";
+        el.classList.add("changed");
+      }
+    };
+  }
+
+  var blocks = {};
+  document.querySelectorAll("[data-code]").forEach(function (host) {
+    var key = host.getAttribute("data-code");
+    blocks[host.id || key] = buildCodeBlock(host, key);
+  });
+
+  /* =========================================================
+     4. Java int/long semantics (exact, via BigInt)
+     ========================================================= */
+  var INT_MIN = -2147483648n, INT_MAX = 2147483647n;
+  function toInt(x) { return BigInt.asIntN(32, x); }
+  function toLong(x) { return BigInt.asIntN(64, x); }
+  /* Parses a Java-like decimal int literal (optional minus, underscores between digits) */
+  function parseIntInput(raw) {
+    var s = String(raw).trim();
+    if (!/^-?\d+(?:_+\d+)*$/.test(s)) return { error: "Введіть ціле число, наприклад 42, -7 або 3_000_125." };
+    var v = BigInt(s.replace(/_/g, ""));
+    if (v < INT_MIN || v > INT_MAX) return { error: "Значення поза діапазоном int (від -2147483648 до 2147483647): такий літерал не скомпілюється." };
+    return { value: v };
+  }
+
+  /* ---------- calculator ---------- */
+  var calcA = document.getElementById("calcA");
+  var calcB = document.getElementById("calcB");
+  var calcOut = document.getElementById("calcOut");
+  var calcMsg = document.getElementById("calcMsg");
+  function runCalc() {
+    var pa = parseIntInput(calcA.value), pb = parseIntInput(calcB.value);
+    if (pa.error || pb.error) {
+      calcMsg.textContent = (pa.error ? "a: " + pa.error + " " : "") + (pb.error ? "b: " + pb.error : "");
+      return;
+    }
+    calcMsg.textContent = "";
+    var a = pa.value, b = pb.value;
+    var box = blocks.intArithBox;
+    box.setLine(4, "        int a = " + a.toString() + ";");
+    box.setLine(5, "        int b = " + b.toString() + ";");
+    var out = [];
+    out.push("sum = " + toInt(a + b).toString());
+    out.push("sumAsLong = " + toLong(a + b).toString());
+    if (b === 0n) {
+      out.push('Exception in thread "main" java.lang.ArithmeticException: / by zero');
+      out.push("\tat IntArithmetic.main(IntArithmetic.java:11)");
+      calcOut.classList.add("err-out");
+    } else {
+      out.push("quotient = " + toInt(a / b).toString());
+      out.push("remainder = " + toInt(a % b).toString());
+      calcOut.classList.remove("err-out");
+    }
+    calcOut.textContent = out.join("\n");
+  }
+  calcA.addEventListener("input", runCalc);
+  calcB.addEventListener("input", runCalc);
+  runCalc();
+
+  /* ---------- args panel ---------- */
+  function splitArgs(s) {
+    var args = [], cur = "", inQ = false, has = false;
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i];
+      if (c === '"') { inQ = !inQ; has = true; continue; }
+      if (!inQ && /\s/.test(c)) {
+        if (has) { args.push(cur); cur = ""; has = false; }
+        continue;
+      }
+      cur += c; has = true;
+    }
+    if (has) args.push(cur);
+    return args;
+  }
+  var argsInput = document.getElementById("argsInput");
+  var argsOut = document.getElementById("argsOut");
+  var argsList = document.getElementById("argsList");
+  function runArgs() {
+    var raw = argsInput.value;
+    var args = splitArgs(raw);
+    blocks.argsCmdBox.setLine(1, "$ java -cp out com.example.intro.Greeter" + (raw.trim() ? " " + raw.trim() : ""));
+    argsOut.textContent = "Hello, Java!\nArguments: " + args.length;
+    argsList.innerHTML = "";
+    if (args.length === 0) {
+      var li0 = document.createElement("li");
+      li0.innerHTML = '<span class="vn">args</span> = порожній масив String[0]';
+      argsList.appendChild(li0);
+    }
+    args.forEach(function (a, i) {
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="vn">args[' + i + ']</span> = "' + esc(a) + '"';
+      argsList.appendChild(li);
+    });
+  }
+  argsInput.addEventListener("input", runArgs);
+  runArgs();
+
+  /* ---------- mini-task simulator ---------- */
+  var durInput = document.getElementById("durInput");
+  var durOut = document.getElementById("durOut");
+  var durBug = document.getElementById("durBug");
+  var durMsg = document.getElementById("durMsg");
+  function runDuration() {
+    var p = parseIntInput(durInput.value);
+    if (p.error) { durMsg.textContent = p.error; return; }
+    durMsg.textContent = "";
+    var t = p.value;
+    var hours = toInt(t / 3600n);
+    var minutes = toInt((t % 3600n) / 60n);
+    var seconds = toInt(t % 60n);
+    var millis = toLong(t * 1000n);
+    var bug = toInt(t * 1000n);
+    durOut.textContent = "Duration: " + hours + " h " + minutes + " min " + seconds + " s\nMilliseconds: " + millis;
+    durBug.textContent = "Duration: " + hours + " h " + minutes + " min " + seconds + " s\nMilliseconds: " + bug;
+  }
+  durInput.addEventListener("input", runDuration);
+  runDuration();
+
+  /* ---------- show/hide toggles ---------- */
+  document.querySelectorAll("[data-toggle]").forEach(function (btn) {
+    var target = document.getElementById(btn.getAttribute("data-toggle"));
+    var showLabel = btn.textContent;
+    var hideLabel = showLabel.replace("Показати", "Сховати");
+    btn.addEventListener("click", function () {
+      var open = target.hidden;
+      target.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.textContent = open ? hideLabel : showLabel;
+    });
+  });
+
+  /* =========================================================
+     5. Step-by-step traces
+     ========================================================= */
+  var TRACES = {
+    greeter: {
+      code: "greeter",
+      steps: [
+        { line: 5, vars: [["args", "String[2] → {\"alpha\", \"beta\"}"]], out: [],
+          note: "Лаунчер завантажив клас com.example.intro.Greeter і викликав main. Слова alpha і beta потрапили в масив args." },
+        { line: 6, vars: [["args", "String[2] → {\"alpha\", \"beta\"}"], ["name", "\"Java\""]], out: [],
+          note: "Оголошено змінну name типу String; вона зберігає посилання на рядок \"Java\"." },
+        { line: 7, vars: [["args", "String[2] → {\"alpha\", \"beta\"}"], ["name", "\"Java\""], ["greeting", "\"Hello, Java!\""]], out: [],
+          note: "Конкатенація трьох рядків створює новий рядок \"Hello, Java!\". Рядок name при цьому не змінився." },
+        { line: 8, vars: [["args", "String[2] → {\"alpha\", \"beta\"}"], ["name", "\"Java\""], ["greeting", "\"Hello, Java!\""], ["count", "2"]], out: [],
+          note: "args.length — кількість елементів масиву args, тут 2. Це значення типу int." },
+        { line: 9, vars: [["args", "String[2] → {\"alpha\", \"beta\"}"], ["name", "\"Java\""], ["greeting", "\"Hello, Java!\""], ["count", "2"]], out: ["Hello, Java!"],
+          note: "println друкує рядок і переходить на новий рядок консолі." },
+        { line: 10, vars: [["args", "String[2] → {\"alpha\", \"beta\"}"], ["name", "\"Java\""], ["greeting", "\"Hello, Java!\""], ["count", "2"]], out: ["Hello, Java!", "Arguments: 2"],
+          note: "Лівий операнд + — рядок, тому int count перетворюється на \"2\" і відбувається конкатенація." },
+        { line: 11, vars: [], out: ["Hello, Java!", "Arguments: 2"],
+          note: "Виконання дійшло до кінця main — програма завершила роботу, її змінні більше не існують." }
+      ]
+    },
+    valueRef: {
+      code: "valueRef",
+      steps: [
+        { line: 4, vars: [["score", "10"]], objs: [], out: [],
+          note: "Примітивна змінна score містить саме значення 10." },
+        { line: 5, vars: [["score", "10"], ["copy", "10"]], objs: [], out: [],
+          note: "У copy скопійовано значення 10. Тепер це дві незалежні змінні з однаковими значеннями." },
+        { line: 6, vars: [["score", "10"], ["copy", "15"]], objs: [], out: [],
+          note: "Змінився лише copy. score, як і раніше, 10: примітиви не ділять стан між собою." },
+        { line: 7, vars: [["score", "10"], ["copy", "15"]], objs: [], out: ["10 15"],
+          note: "Друкуємо обидва значення." },
+        { line: 9, vars: [["score", "10"], ["copy", "15"], ["message", "→ об’єкт #1"]], objs: [["#1 StringBuilder", "\"Hi\""]], out: ["10 15"],
+          note: "new створив об’єкт StringBuilder (#1). У змінну message записано не сам об’єкт, а посилання на нього." },
+        { line: 10, vars: [["score", "10"], ["copy", "15"], ["message", "→ об’єкт #1"], ["alias", "→ об’єкт #1"]], objs: [["#1 StringBuilder", "\"Hi\""]], out: ["10 15"],
+          note: "У alias скопійовано посилання. Новий об’єкт не створено: обидві змінні вказують на #1." },
+        { line: 11, vars: [["score", "10"], ["copy", "15"], ["message", "→ об’єкт #1"], ["alias", "→ об’єкт #1"]], objs: [["#1 StringBuilder", "\"Hi!\""]], out: ["10 15"],
+          note: "append змінив сам об’єкт #1. Зміну видно через будь-яке посилання на нього." },
+        { line: 12, vars: [["score", "10"], ["copy", "15"], ["message", "→ об’єкт #1"], ["alias", "→ об’єкт #1"]], objs: [["#1 StringBuilder", "\"Hi!\""]], out: ["10 15", "Hi! Hi!"],
+          note: "Обидва посилання ведуть до одного вмісту, тож друкується \"Hi! Hi!\"." },
+        { line: 13, vars: [["score", "10"], ["copy", "15"], ["message", "→ об’єкт #1"], ["alias", "→ об’єкт #1"]], objs: [["#1 StringBuilder", "\"Hi!\""]], out: ["10 15", "Hi! Hi!", "true"],
+          note: "== порівнює посилання: обидва вказують на #1, тому true." },
+        { line: 14, vars: [], objs: [], out: ["10 15", "Hi! Hi!", "true"],
+          note: "main завершився, програма закінчила роботу." }
+      ]
+    }
+  };
+
+  function varListHTML(pairs, emptyText) {
+    if (!pairs || !pairs.length) return '<li style="color:var(--muted)">' + emptyText + "</li>";
+    return pairs.map(function (p) {
+      return '<li><span class="vn">' + esc(p[0]) + "</span> = " + esc(p[1]) + "</li>";
+    }).join("");
+  }
+
+  document.querySelectorAll("[data-trace]").forEach(function (panel) {
+    var key = panel.getAttribute("data-trace");
+    var tr = TRACES[key];
+    var grid = document.createElement("div");
+    grid.className = "trace-grid";
+    var codeHost = document.createElement("div");
+    var stateBox = document.createElement("div");
+    stateBox.className = "state";
+    stateBox.setAttribute("aria-live", "polite");
+    grid.appendChild(codeHost);
+    grid.appendChild(stateBox);
+
+    var controls = document.createElement("div");
+    controls.className = "btn-row";
+    controls.innerHTML =
+      '<button type="button" class="btn" data-act="back">‹ Крок назад</button>' +
+      '<button type="button" class="btn primary" data-act="fwd">Крок вперед ›</button>' +
+      '<button type="button" class="btn" data-act="reset">Скинути</button>' +
+      '<span class="step-count"></span>';
+    panel.appendChild(controls);
+    panel.appendChild(grid);
+
+    var block = buildCodeBlock(codeHost, tr.code);
+    var idx = -1;
+    var back = controls.querySelector('[data-act="back"]');
+    var fwd = controls.querySelector('[data-act="fwd"]');
+    var counter = controls.querySelector(".step-count");
+    var hasObjs = tr.steps.some(function (s) { return s.objs && s.objs.length; });
+
+    function render() {
+      back.disabled = idx < 0;
+      fwd.disabled = idx >= tr.steps.length - 1;
+      counter.textContent = "Крок " + (idx + 1) + " з " + tr.steps.length;
+      if (idx < 0) {
+        block.setActive(0);
+        stateBox.innerHTML = '<h5>Стан</h5><p style="margin:0">Програма ще не запущена. Натисніть «Крок вперед».</p>';
+        return;
+      }
+      var s = tr.steps[idx];
+      block.setActive(s.line);
+      var html = "<h5>Змінні</h5><ul class=\"var-list\">" + varListHTML(s.vars, "немає") + "</ul>";
+      if (hasObjs) {
+        html += "<h5>Об’єкти</h5><ul class=\"var-list\">" + varListHTML(s.objs, "ще не створено") + "</ul>";
+      }
+      html += "<h5>Вивід</h5><div class=\"console\">" + esc(s.out.join("\n")) + "</div>" +
+        '<p class="step-note">' + esc(s.note) + "</p>";
+      stateBox.innerHTML = html;
+    }
+    back.addEventListener("click", function () { if (idx >= 0) { idx--; render(); } });
+    fwd.addEventListener("click", function () { if (idx < tr.steps.length - 1) { idx++; render(); } });
+    controls.querySelector('[data-act="reset"]').addEventListener("click", function () { idx = -1; render(); });
+    render();
+  });
+
+  /* =========================================================
+     6. "What will be printed?" blocks
+     ========================================================= */
+  var PREDICT = {
+    division: {
+      answer: "3\n3.0",
+      explain: "total і count мають тип int, тому ділення цілочисельне: 7 / 2 = 3, дробова частина відкидається. У рядку з average готовий результат 3 лише потім розширюється до double під час присвоєння, і println(double) друкує 3.0. Щоб отримати 3.5, хоча б один операнд треба зробити дробовим ще до ділення, наприклад 7.0 / 2.",
+      link: ["JLS §15.17.2 — Division Operator /", "https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.17.2"]
+    },
+    charMath: {
+      answer: "66\n131\nAB",
+      explain: "В арифметичному виразі char розширюється до int: код 'A' — 65, тож nextCode дорівнює 66. У sum додаються два числа 65 + 66 = 131, бо жоден з операндів не є рядком. У joined першим операндом стоїть порожній рядок \"\", тому кожен наступний + — це конкатенація, і символи склеюються в \"AB\".",
+      link: ["JLS §15.18 — Additive Operators", "https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18"]
+    }
+  };
+  function normalize(s) {
+    return s.replace(/\r/g, "").split("\n").map(function (l) { return l.replace(/\s+$/, ""); }).join("\n").trim();
+  }
+  document.querySelectorAll("[data-predict]").forEach(function (panel) {
+    var p = PREDICT[panel.getAttribute("data-predict")];
+    var id = "pred-" + panel.getAttribute("data-predict");
+    var wrap = document.createElement("div");
+    wrap.innerHTML =
+      '<label class="field" for="' + id + '">Ваша відповідь (кожен рядок виводу — з нового рядка)</label>' +
+      '<textarea class="answer-box" id="' + id + '" spellcheck="false" autocomplete="off"></textarea>' +
+      '<div class="btn-row"><button type="button" class="btn" data-act="check">Перевірити</button>' +
+      '<button type="button" class="btn primary" data-act="show">Показати вивід</button></div>' +
+      '<div class="verdict" aria-live="polite"></div>' +
+      '<div class="reveal" hidden><div class="console"></div><p class="step-note"></p></div>';
+    panel.appendChild(wrap);
+    var ta = wrap.querySelector("textarea");
+    var verdict = wrap.querySelector(".verdict");
+    var reveal = wrap.querySelector(".reveal");
+    reveal.querySelector(".console").textContent = p.answer;
+    reveal.querySelector(".step-note").innerHTML = esc(p.explain) +
+      ' Документація: <a href="' + p.link[1] + '" target="_blank" rel="noopener">' + esc(p.link[0]) + "</a>.";
+    wrap.querySelector('[data-act="check"]').addEventListener("click", function () {
+      var mine = normalize(ta.value);
+      if (!mine) { verdict.className = "verdict close"; verdict.textContent = "Спершу запишіть свій варіант виводу."; return; }
+      if (mine === normalize(p.answer)) {
+        verdict.className = "verdict good";
+        verdict.textContent = "✅ Правильно! Відкрийте пояснення, щоб звірити міркування.";
+      } else {
+        verdict.className = "verdict close";
+        verdict.textContent = "Ваш вивід відрізняється від того, що надрукує Java. Перегляньте кожен рядок: якого типу вираз, який передається в println?";
+      }
+    });
+    wrap.querySelector('[data-act="show"]').addEventListener("click", function () { reveal.hidden = false; });
+  });
+
+  /* =========================================================
+     7. Quiz
+     ========================================================= */
+  var J = "https://docs.oracle.com/javase/specs/jls/se25/html/";
+  var QUIZ = [
+    {
+      q: "Which JDK tool translates a <code>.java</code> source file into <code>.class</code> files containing bytecode?",
+      link: ["The javac Command", "https://docs.oracle.com/en/java/javase/25/docs/specs/man/javac.html"],
+      ok: "✅ Правильно! javac — компілятор: він перевіряє вихідний код і записує байткод у .class-файли.",
+      opts: [
+        { t: "<code>javac</code>", c: true },
+        { t: "<code>java</code>, because it compiles and runs the program", fb: "У класичному запуску java MyApp що саме отримує лаунчер — файл з кодом чи ім’я вже скомпільованого класу? І чи з’являється .class-файл, коли запускаєте java MyApp.java?" },
+        { t: "<code>jshell</code>", fb: "JShell одразу виконує введені фрагменти. Чи лишаються після такої сесії .class-файли у вашій теці?" },
+        { t: "The JVM's JIT compiler at runtime", fb: "JVM працює вже під час виконання. А звідки вона бере байткод, який потім виконує?" }
+      ]
+    },
+    {
+      q: "Which declaration is the classic entry point that the <code>java</code> launcher recognizes in every Java version?",
+      link: ["JLS §12.1.4 (Java Virtual Machine Startup)", J + "jls-12.html#jls-12.1.4"],
+      ok: "✅ Правильно! public — доступний лаунчеру, static — викликається без об’єкта, void — нічого не повертає, String[] args — аргументи командного рядка.",
+      opts: [
+        { t: "<code>public static void main(String[] args)</code>", c: true },
+        { t: "<code>public void main(String args)</code>", fb: "Користувач може передати кілька аргументів. Чи вміститься їх список в один String? І чи зможе лаунчер викликати метод без об’єкта, якщо немає static — у класичній формі?" },
+        { t: "<code>public static int main(String[] args)</code>", fb: "У C main повертає int. А який тип результату має main у класичній сигнатурі Java?" },
+        { t: "<code>public static void Main(String[] args)</code>", fb: "Java чутлива до регістру. Чи вважатиме лаунчер Main і main одним ім’ям?" }
+      ]
+    },
+    {
+      q: "What does this print?",
+      code: "System.out.println(7 / 2);",
+      link: ["JLS §15.17.2 — Division Operator /", J + "jls-15.html#jls-15.17.2"],
+      ok: "✅ Правильно! Обидва операнди int, тому ділення цілочисельне й відкидає дробову частину.",
+      opts: [
+        { t: "<code>3</code>", c: true },
+        { t: "<code>3.5</code>", fb: "Якого типу обидва операнди? І якого типу тоді буде результат ділення?" },
+        { t: "<code>4</code>", fb: "Цілочисельне ділення в Java округлює до найближчого чи просто відкидає дробову частину, рухаючись до нуля?" },
+        { t: "<code>3.0</code>", fb: "Звідки взялися б «.0», якщо результат виразу має тип int?" }
+      ]
+    },
+    {
+      q: "What does this print?",
+      code: "System.out.println(1 + 2 + \"3\");",
+      link: ["JLS §15.18.1 — String Concatenation Operator +", J + "jls-15.html#jls-15.18.1"],
+      ok: "✅ Правильно! + виконується зліва направо: спершу 1 + 2 = 3 (числа), потім 3 + \"3\" — конкатенація.",
+      opts: [
+        { t: "<code>123</code>", fb: "У якому порядку Java обчислює кілька операторів + — зліва направо чи всі разом? Що вийде після першого 1 + 2?" },
+        { t: "<code>33</code>", c: true },
+        { t: "<code>6</code>", fb: "Чи є в цьому виразі операнд типу String? Що стається з числом, коли його додають до рядка?" },
+        { t: "It does not compile: <code>int</code> and <code>String</code> cannot be added", fb: "Згадайте рядок \"Arguments: \" + count у програмі Greeter. Він компілюється?" }
+      ]
+    },
+    {
+      q: "What does this print?",
+      code: "System.out.println('A' + 1);",
+      link: ["JLS §15.18.2 — Additive Operators for Numeric Types", J + "jls-15.html#jls-15.18.2"],
+      ok: "✅ Правильно! char у арифметиці розширюється до int: 65 + 1 = 66, і викликається println(int).",
+      opts: [
+        { t: "<code>B</code>", fb: "Який тип має результат 'A' + 1, якщо char в арифметиці стає int? Яку версію println тоді буде викликано?" },
+        { t: "<code>A1</code>", fb: "Щоб вийшов рядок \"A1\", хоча б один операнд має бути String. 'A' в одинарних лапках — це String чи char?" },
+        { t: "<code>66</code>", c: true },
+        { t: "<code>65</code>", fb: "65 — справді код 'A'. А що відбувається з цим значенням, коли до нього додають 1?" }
+      ]
+    },
+    {
+      q: "What does this print?",
+      code: "int big = 2147483647;\nSystem.out.println(big + 1);",
+      link: ["JLS §4.2.2 — Integer Operations", J + "jls-4.html#jls-4.2.2"],
+      ok: "✅ Правильно! Цілочисельні оператори не повідомляють про переповнення: значення загортається до мінімального int.",
+      opts: [
+        { t: "<code>2147483648</code>", fb: "Чи вміщується 2147483648 у 32-бітний int? І якого типу вираз big + 1?" },
+        { t: "<code>-2147483648</code>", c: true },
+        { t: "An <code>ArithmeticException</code> is thrown", fb: "Яку саме ситуацію в цілочисельній арифметиці JLS називає причиною ArithmeticException — переповнення чи ділення на нуль?" },
+        { t: "A compilation error about integer overflow", fb: "big — звичайна змінна, а не літерал. Чи вважає JLS переповнення під час виконання помилкою, яку має виявити компілятор?" }
+      ]
+    },
+    {
+      q: "Which of these is <strong>not</strong> a primitive type in Java?",
+      link: ["JLS §4.2 — Primitive Types and Values", J + "jls-4.html#jls-4.2"],
+      ok: "✅ Правильно! String — клас із пакета java.lang, тобто посилальний тип, хоч мова й дає йому спеціальну підтримку літералів.",
+      opts: [
+        { t: "<code>char</code>", fb: "char має власне ключове слово й розмір 16 біт. Чи є воно серед восьми примітивних типів у JLS?" },
+        { t: "<code>String</code>", c: true },
+        { t: "<code>boolean</code>", fb: "Чи пишеться boolean з малої літери як ключове слово? Чи створюємо ми значення true через new?" },
+        { t: "<code>byte</code>", fb: "byte — найменший цілочисельний тип у 8 біт. До якої групи типів належать цілі типи в JLS?" }
+      ]
+    },
+    {
+      q: "What happens when you try to compile and run this program?",
+      code: "public class Counter {\n    public static void main(String[] args) {\n        int count;\n        System.out.println(count + 1);\n    }\n}",
+      link: ["JLS Chapter 16 — Definite Assignment", J + "jls-16.html"],
+      ok: "✅ Правильно! Локальну змінну треба явно присвоїти до читання, інакше javac повідомить: variable count might not have been initialized.",
+      opts: [
+        { t: "It prints <code>1</code>, because <code>int</code> variables default to <code>0</code>", fb: "Для яких змінних JLS гарантує значення за замовчуванням — для полів класу чи для локальних змінних усередині main?" },
+        { t: "It prints whatever value was left in that memory", fb: "У C таке трапляється. Чи дозволяє Java-компілятор узагалі дійти до виконання такого коду?" },
+        { t: "The code does not compile", c: true },
+        { t: "It compiles, but throws an exception at runtime", fb: "На якому етапі Java перевіряє, чи змінну присвоєно до читання, — під час компіляції чи виконання?" }
+      ]
+    },
+    {
+      q: "What does this print?",
+      code: "StringBuilder first = new StringBuilder(\"Hi\");\nStringBuilder second = first;\nsecond.append(\"!\");\nSystem.out.println(first);",
+      link: ["JLS §4.3.1 — Objects", J + "jls-4.html#jls-4.3.1"],
+      ok: "✅ Правильно! Обидві змінні зберігають посилання на один об’єкт, тож зміна через second видна через first.",
+      opts: [
+        { t: "<code>Hi</code>", fb: "Скільки разів тут викликано new — і скільки, відповідно, існує об’єктів StringBuilder?" },
+        { t: "<code>Hi!</code>", c: true },
+        { t: "<code>Hi!!</code>", fb: "Скільки разів викликано append?" },
+        { t: "It does not compile", fb: "Чи можна присвоїти одну змінну посилального типу іншій змінній того самого типу?" }
+      ]
+    },
+    {
+      q: "A file starts with <code>package com.example.tools;</code> and declares <code>public class Report</code>. What is the fully qualified name of the class?",
+      link: ["JLS §6.7 — Fully Qualified Names", J + "jls-6.html#jls-6.7"],
+      ok: "✅ Правильно! Повне ім’я — це ім’я пакета, крапка й ім’я класу. Саме його ви передаєте лаунчеру та пишете в import.",
+      opts: [
+        { t: "<code>Report</code> — the package only affects the folder layout", fb: "Якщо в двох різних пакетах є клас Report, як компілятор їх розрізнить?" },
+        { t: "<code>com/example/tools/Report.java</code>", fb: "Це шлях до файлу з вихідним кодом. А як ви називаєте клас у коді, наприклад в import?" },
+        { t: "<code>com.example.tools.Report</code>", c: true },
+        { t: "<code>tools.Report</code>", fb: "tools — окремий пакет чи лише остання частина імені пакета com.example.tools?" }
+      ]
+    }
+  ];
+
+  var quizBox = document.getElementById("quizBox");
+  var scoreBox = document.getElementById("quizScore");
+  var state;
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function codeHTML(text) {
+    return '<div class="codebox"><pre><code>' + text.split("\n").map(function (l) {
+      return '<span class="ln"><span class="tx" style="padding-left:16px">' + (highlightJava(l) || " ") + "</span></span>";
+    }).join("") + "</code></pre></div>";
+  }
+
+  function buildQuiz() {
+    state = QUIZ.map(function () { return { first: null, solved: false }; });
+    quizBox.innerHTML = "";
+    scoreBox.hidden = true;
+    QUIZ.forEach(function (item, qi) {
+      var card = document.createElement("div");
+      card.className = "quiz-q";
+      var html = '<h4><span class="qn">' + (qi + 1) + ".</span>" + item.q + "</h4>";
+      if (item.code) html += codeHTML(item.code);
+      html += '<div class="opts" role="group" aria-label="Варіанти відповіді на питання ' + (qi + 1) + '"></div><div class="fb" hidden aria-live="polite"></div>';
+      card.innerHTML = html;
+      var optsBox = card.querySelector(".opts");
+      var fb = card.querySelector(".fb");
+      shuffle(item.opts).forEach(function (opt) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "opt";
+        b.innerHTML = opt.t;
+        b.addEventListener("click", function () {
+          if (state[qi].solved) return;
+          if (state[qi].first === null) state[qi].first = !!opt.c;
+          var linkHTML = '<p>Документація: <a href="' + item.link[1] + '" target="_blank" rel="noopener">' + esc(item.link[0]) + "</a></p>";
+          fb.hidden = false;
+          if (opt.c) {
+            state[qi].solved = true;
+            b.classList.add("right");
+            fb.className = "fb good";
+            fb.innerHTML = "<p>" + esc(item.ok) + "</p>" + linkHTML;
+            optsBox.querySelectorAll(".opt").forEach(function (o) { o.disabled = true; });
+          } else {
+            b.classList.add("tried");
+            b.disabled = true;
+            fb.className = "fb think";
+            fb.innerHTML = "<p>🤔 " + esc(opt.fb) + "</p><p>Подумайте й оберіть ще раз.</p>" + linkHTML;
+          }
+          updateScore();
+        });
+        optsBox.appendChild(b);
+      });
+      quizBox.appendChild(card);
+    });
+  }
+
+  function updateScore() {
+    var answered = state.filter(function (s) { return s.first !== null; }).length;
+    if (answered < QUIZ.length) return;
+    var right = state.filter(function (s) { return s.first === true; }).length;
+    scoreBox.hidden = false;
+    var comment = right === QUIZ.length ? "Відмінно — усі відповіді з першої спроби."
+      : right >= 7 ? "Добрий результат. Перечитайте розділи, де знадобилася друга спроба."
+      : "Варто повернутися до теорії та трасувань, а потім пройти квіз ще раз.";
+    scoreBox.innerHTML = "<p style=\"margin:0 0 6px\">Правильних відповідей з першої спроби:</p>" +
+      "<p style=\"margin:0 0 10px\"><strong>" + right + " / " + QUIZ.length + "</strong></p>" +
+      "<p style=\"margin:0 0 12px\">" + comment + "</p>" +
+      '<button type="button" class="btn" id="quizRetry">Пройти ще раз</button>';
+    document.getElementById("quizRetry").addEventListener("click", function () {
+      buildQuiz();
+      document.getElementById("quiz").scrollIntoView();
+    });
+  }
+  buildQuiz();
+
+  /* =========================================================
+     8. Table of contents, active section, reading progress
+     ========================================================= */
+  var sections = Array.prototype.slice.call(document.querySelectorAll("section.chapter[data-toc]"));
+  var tocList = document.getElementById("tocList");
+  var tocTargets = [];   /* { el, link } in document order */
+  sections.forEach(function (sec) {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.href = "#" + sec.id;
+    var no = sec.querySelector(".sec-no");
+    a.innerHTML = '<span class="n">' + (no ? esc(no.textContent) : "") + "</span><span>" + esc(sec.getAttribute("data-toc")) + "</span>";
+    li.appendChild(a);
+    tocTargets.push({ el: sec, link: a });
+    var subs = sec.querySelectorAll("h3[id]");
+    if (subs.length) {
+      var ol = document.createElement("ol");
+      subs.forEach(function (h) {
+        var sli = document.createElement("li");
+        var sa = document.createElement("a");
+        sa.href = "#" + h.id;
+        sa.className = "sub";
+        sa.textContent = h.textContent;
+        sli.appendChild(sa);
+        ol.appendChild(sli);
+        tocTargets.push({ el: h, link: sa, parent: a });
+      });
+      li.appendChild(ol);
+    }
+    tocList.appendChild(li);
+  });
+
+  /* drawer for narrow screens */
+  var tocNav = document.getElementById("toc");
+  var tocOpenBtn = document.getElementById("tocOpen");
+  var tocCloseBtn = document.getElementById("tocClose");
+  var tocOverlay = document.getElementById("tocOverlay");
+  var drawerMQ = window.matchMedia ? window.matchMedia("(max-width: 980px)") : null;
+  function isDrawer() { return drawerMQ ? drawerMQ.matches : false; }
+  function openToc() {
+    document.body.classList.add("toc-is-open");
+    tocOverlay.hidden = false;
+    tocOpenBtn.setAttribute("aria-expanded", "true");
+    var current = tocList.querySelector("a.active") || tocList.querySelector("a");
+    if (current) current.focus();
+  }
+  function closeToc(returnFocus) {
+    if (!document.body.classList.contains("toc-is-open")) return;
+    document.body.classList.remove("toc-is-open");
+    tocOverlay.hidden = true;
+    tocOpenBtn.setAttribute("aria-expanded", "false");
+    if (returnFocus) tocOpenBtn.focus();
+  }
+  tocOpenBtn.addEventListener("click", openToc);
+  tocCloseBtn.addEventListener("click", function () { closeToc(true); });
+  tocOverlay.addEventListener("click", function () { closeToc(true); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeToc(true);
+    if (e.key === "Tab" && isDrawer() && document.body.classList.contains("toc-is-open")) {
+      var f = tocNav.querySelectorAll("a, button");
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  tocList.addEventListener("click", function (e) {
+    if (e.target.closest("a") && isDrawer()) closeToc(false);
+  });
+  if (drawerMQ) {
+    var onMQ = function () { if (!isDrawer()) closeToc(false); };
+    if (drawerMQ.addEventListener) drawerMQ.addEventListener("change", onMQ);
+    else if (drawerMQ.addListener) drawerMQ.addListener(onMQ);
+  }
+
+  var bar = document.getElementById("progressBar");
+  var progress = bar.parentElement;
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - window.innerHeight;
+      var pct = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
+      bar.style.width = pct + "%";
+      progress.setAttribute("aria-valuenow", String(Math.round(pct)));
+      var current = 0;
+      tocTargets.forEach(function (t, i) {
+        if (t.el.getBoundingClientRect().top < 150) current = i;
+      });
+      var cur = tocTargets[current];
+      tocTargets.forEach(function (t) {
+        var on = t === cur || (cur.parent && t.link === cur.parent);
+        t.link.classList.toggle("active", on);
+        if (t === cur) t.link.setAttribute("aria-current", "location"); else t.link.removeAttribute("aria-current");
+      });
+      if (!isDrawer()) {
+        var lr = cur.link.getBoundingClientRect(), nr = tocNav.getBoundingClientRect();
+        if (lr.top < nr.top + 40 || lr.bottom > nr.bottom - 20) tocNav.scrollTop += lr.top - nr.top - nr.height / 3;
+      }
+      ticking = false;
+    });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>
