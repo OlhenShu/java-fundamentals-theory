@@ -136,6 +136,14 @@ code { font-family: var(--font-code); font-size: .88em; background: var(--surfac
 .brand { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .brand small { font-size: 13px; opacity: .75; letter-spacing: .01em; }
 .brand strong { font-size: 18px; font-weight: 700; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.home-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 600 14px var(--font-text); color: var(--navy-ink);
+  background: transparent; border: 1.5px solid rgba(255,255,255,.45); border-radius: 8px;
+  padding: 6px 10px; text-decoration: none; flex-shrink: 0; white-space: nowrap;
+}
+.home-mark { display: none; }
+.home-link:hover { border-color: #fff; }
 .theme-toggle {
   display: inline-flex; align-items: center; gap: 8px;
   font: 600 14px var(--font-text);
@@ -399,8 +407,11 @@ footer.page-foot { color: var(--muted); font-size: 14px; border-top: 1px solid v
 }
 @media (max-width: 560px) {
   body { font-size: 16px; }
-  .header-inner { padding: 10px 14px; }
+  .header-inner { gap: 8px; padding: 10px 14px; }
+  .brand small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .brand strong { font-size: 16px; }
+  .home-mark { display: inline; }
+  .home-label { display: none; }
   .theme-toggle .label { display: none; }
   .layout { padding: 0 14px 60px; }
   .codebox pre { font-size: 13px; }
@@ -418,6 +429,7 @@ footer.page-foot { color: var(--muted); font-size: 14px; border-top: 1px solid v
       <small>Java Fundamentals</small>
       <strong>Тема 01. Java Introduction</strong>
     </div>
+    <a class="home-link" href="../index.html" aria-label="На головну"><span class="home-mark" aria-hidden="true">←</span><span class="home-label">На головну</span></a>
     <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">
       <span class="icon" aria-hidden="true">◐</span>
       <span class="label">Темна тема</span>
