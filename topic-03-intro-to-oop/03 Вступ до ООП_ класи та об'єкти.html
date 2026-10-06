@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Вступ до ООП: класи та об'єкти</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* konspekt — navy/orange theme. Edit tokens here to restyle every konspekt at once. */
+:root {
+  --bg: #F4F6FA;
+  --surface: #FFFFFF;
+  --ink: #17233D;
+  --muted: #56637E;
+  --line: #DCE2EC;
+  --navy: #1E3A6B;
+  --navy-soft: #E7EDF7;
+  --orange: #E2711D;
+  --orange-soft: #FCEEE2;
+  --ok: #2E7D4F;
+  --ok-soft: #E5F3EA;
+  --bad: #B3402B;
+  --bad-soft: #FBE9E5;
+  --code-bg: #0F1B33;
+  --code-ink: #E3E9F5;
+  --code-cap: #16264A;
+  --hero-bg: #1E3A6B;
+  --hero-ink: #FFFFFF;
+  --sans: "IBM Plex Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, "Courier New", monospace;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1526; --surface: #142036; --ink: #E4E9F3; --muted: #9AA7C1; --line: #26344F;
+    --navy: #93B3EA; --navy-soft: #1A2A47; --orange: #F49A4B; --orange-soft: #33251A;
+    --ok: #6CC48F; --ok-soft: #15301F; --bad: #F08A73; --bad-soft: #3A1E19;
+    --code-bg: #091224; --code-cap: #111F3B; --hero-bg: #111F3B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1526; --surface: #142036; --ink: #E4E9F3; --muted: #9AA7C1; --line: #26344F;
+  --navy: #93B3EA; --navy-soft: #1A2A47; --orange: #F49A4B; --orange-soft: #33251A;
+  --ok: #6CC48F; --ok-soft: #15301F; --bad: #F08A73; --bad-soft: #3A1E19;
+  --code-bg: #091224; --code-cap: #111F3B; --hero-bg: #111F3B;
+  color-scheme: dark;
+}
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 16px); -webkit-text-size-adjust: 100%; }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--sans); font-size: 17px; line-height: 1.65;
+}
+a { color: var(--navy); text-underline-offset: 2px; }
+a:hover { color: var(--orange); }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; border-radius: 4px; }
+img { max-width: 100%; }
+
+/* hero */
+.hero { background: var(--hero-bg); color: var(--hero-ink); border-bottom: 6px solid var(--orange); }
+.hero-in { max-width: 1180px; margin: 0 auto; padding: 36px 24px 32px; }
+.hero-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.hero-course { margin: 0; font-size: 15px; opacity: .85; }
+.hero h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.12; margin: 14px 0 8px; font-weight: 700; letter-spacing: -0.01em; max-width: 28ch; }
+.hero-sub { margin: 0 0 6px; font-size: 19px; opacity: .9; max-width: 60ch; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.hero-meta span { font-size: 14px; padding: 4px 10px; border-radius: 6px; background: rgba(255,255,255,.1); }
+.hero-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.home-link {
+  font-size: 14px; color: var(--hero-ink); text-decoration: none; white-space: nowrap;
+  border: 1px solid rgba(255,255,255,.4); border-radius: 6px; padding: 5px 12px;
+}
+.home-link:hover { border-color: var(--orange); color: var(--hero-ink); }
+.home-mark { display: none; }
+.theme-btn {
+  font: inherit; font-size: 14px; color: var(--hero-ink); background: transparent;
+  border: 1px solid rgba(255,255,255,.4); border-radius: 6px; padding: 5px 12px; cursor: pointer;
+}
+.theme-btn:hover { border-color: var(--orange); }
+
+/* layout */
+.layout { max-width: 1180px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: 1fr; gap: 32px; }
+@media (min-width: 1040px) { .layout { grid-template-columns: 250px minmax(0, 1fr); } }
+.content { min-width: 0; max-width: 74ch; }
+.toc { min-width: 0; }
+@media (min-width: 1040px) { .toc-box { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); max-height: calc(100vh - 40px); overflow: auto; } }
+.toc-box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+.toc-box summary { font-weight: 600; cursor: pointer; }
+.toc ol { list-style: none; margin: 10px 0 0; padding: 0; font-size: 15px; line-height: 1.4; }
+.toc li { margin: 0; }
+.toc a { display: block; padding: 5px 0 5px 10px; text-decoration: none; color: var(--muted); border-left: 2px solid transparent; }
+.toc .toc-l3 a { padding-left: 22px; font-size: 14px; }
+.toc a:hover, .toc a.active { color: var(--ink); border-left-color: var(--orange); }
+
+/* typography */
+.content h2 { font-size: 28px; line-height: 1.2; margin: 52px 0 14px; color: var(--navy); }
+.content h2:first-child { margin-top: 8px; }
+.content h3 { font-size: 21px; margin: 34px 0 10px; }
+.content h4 { font-size: 17px; margin: 0 0 8px; }
+.content p { margin: 0 0 16px; }
+.content ul, .content ol { margin: 0 0 16px; padding-left: 24px; }
+.content .sources ul { padding-left: 0; }
+.content li { margin-bottom: 6px; }
+:not(pre) > code {
+  font-family: var(--mono); font-size: .88em; background: var(--navy-soft); color: var(--ink);
+  padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere;
+}
+
+/* code */
+.code { margin: 20px 0 22px; background: var(--code-bg); border-radius: 10px; overflow: hidden; }
+.code figcaption { display: flex; align-items: center; gap: 12px; padding: 7px 12px; background: var(--code-cap); color: #AFC0DE; font-size: 13px; font-family: var(--mono); }
+.code-lang { color: var(--orange); }
+.code-title { color: #DDE6F7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.copy { margin-left: auto; font: inherit; font-size: 12px; color: #C9D6EE; background: transparent; border: 1px solid #36507F; border-radius: 5px; padding: 2px 9px; cursor: pointer; }
+.copy:hover { border-color: var(--orange); color: #fff; }
+.code pre, .code-out pre { margin: 0; overflow-x: auto; }
+.code pre code { display: block; padding: 14px 16px; font-family: var(--mono); font-size: 14px; line-height: 1.6; color: var(--code-ink); background: transparent; tab-size: 4; }
+.code-out { border-top: 1px dashed #36507F; }
+.code-out.solo { background: var(--code-bg); border-radius: 10px; border: 0; margin: 20px 0; }
+.code-out-h { font-size: 12px; font-family: var(--mono); color: var(--orange); padding: 8px 16px 0; }
+.code-out pre { padding: 6px 16px 14px; font-family: var(--mono); font-size: 14px; color: #CFE8D6; }
+/* syntax tokens (highlight.js classes) */
+.hljs-keyword, .hljs-selector-tag, .hljs-built_in, .hljs-doctag { color: #F49A4B; }
+.hljs-string, .hljs-regexp, .hljs-template-variable { color: #9ED6A5; }
+.hljs-number, .hljs-literal, .hljs-symbol { color: #F3CB7A; }
+.hljs-comment, .hljs-quote { color: #7385A8; font-style: italic; }
+.hljs-title, .hljs-title.function_, .hljs-section { color: #8DC4FF; }
+.hljs-type, .hljs-title.class_, .hljs-class .hljs-title { color: #7FDCCB; }
+.hljs-attr, .hljs-attribute, .hljs-property, .hljs-params { color: #C9B3FF; }
+.hljs-meta, .hljs-meta .hljs-keyword { color: #E6A6CB; }
+.hljs-tag, .hljs-name { color: #8DC4FF; }
+.hljs-variable, .hljs-subst { color: var(--code-ink); }
+
+/* problem → why → solution → when chain */
+.chain { position: relative; margin: 24px 0 28px; padding-left: 30px; }
+.chain::before { content: ""; position: absolute; left: 8px; top: 14px; bottom: 14px; width: 2px; background: linear-gradient(var(--orange), var(--navy)); }
+.step { position: relative; margin-bottom: 14px; }
+.step-dot { position: absolute; left: -30px; top: 8px; width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--orange); background: var(--bg); }
+.step-problem .step-dot { background: var(--orange); }
+.step-why .step-dot { border-color: var(--orange); }
+.step-solution .step-dot { background: var(--navy); border-color: var(--navy); }
+.step-when .step-dot { border-color: var(--navy); }
+.step-body { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px 2px; }
+.step-problem .step-body { background: var(--orange-soft); border-color: transparent; }
+.step-solution .step-body { background: var(--navy-soft); border-color: transparent; }
+.step-body h4 { color: var(--navy); }
+.step-problem h4 { color: var(--orange); }
+
+/* callouts */
+.callout { margin: 22px 0; padding: 14px 18px 2px; border-radius: 10px; border-left: 5px solid var(--navy); background: var(--navy-soft); }
+.callout h4 { color: var(--navy); }
+.callout-tip, .callout-important { border-left-color: var(--orange); background: var(--orange-soft); }
+.callout-tip h4, .callout-important h4 { color: var(--orange); }
+.callout-warning { border-left-color: var(--bad); background: var(--bad-soft); }
+.callout-warning h4 { color: var(--bad); }
+
+/* antipattern */
+.anti { margin: 26px 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.anti-bad, .anti-fix { padding: 16px 18px 4px; }
+.anti-bad { border-top: 5px solid var(--bad); }
+.anti-bad h4 { color: var(--bad); }
+.anti-fix { border-top: 1px solid var(--line); box-shadow: inset 0 4px 0 var(--ok); }
+.anti-fix h4 { color: var(--ok); }
+
+/* task, predict, details */
+.task, .predict { margin: 28px 0; padding: 18px 20px 6px; border-radius: 10px; background: var(--surface); border: 2px solid var(--navy); }
+.task > h4, .predict > h4 { color: var(--navy); font-size: 19px; }
+details { margin: 0 0 14px; }
+details > summary { cursor: pointer; font-weight: 600; color: var(--navy); padding: 6px 0; }
+details > summary:hover { color: var(--orange); }
+details.sol[open], details.hint[open], details.more[open] { padding-bottom: 4px; }
+details.sol[open] > summary, details.hint[open] > summary { margin-bottom: 8px; }
+.more { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 6px 18px; }
+.reveal {
+  font: inherit; font-weight: 600; color: #fff; background: var(--orange); border: 0; border-radius: 8px;
+  padding: 8px 16px; margin: 4px 0 16px; cursor: pointer;
+}
+.reveal:hover { filter: brightness(1.08); }
+.predict-a { border-top: 1px dashed var(--line); padding-top: 14px; }
+
+/* diagram */
+.diagram { margin: 22px 0; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; }
+.diagram pre.mermaid { margin: 0; background: transparent; }
+
+/* sources */
+.sources ul { list-style: none; padding: 0; }
+.sources li { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.src-note { display: block; color: var(--muted); font-size: 15px; }
+
+/* quiz */
+.quiz { margin-top: 40px; }
+.content .q-list { list-style: none; padding: 0; counter-reset: q; }
+.q { counter-increment: q; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px 8px; margin-bottom: 16px; }
+.q-prompt { position: relative; padding-left: 36px; }
+.q-prompt::before { content: counter(q); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: var(--surface); font-size: 14px; font-weight: 700; display: grid; place-items: center; }
+.q-opts { display: grid; gap: 8px; margin: 4px 0 10px; }
+.opt {
+  display: flex; gap: 10px; align-items: flex-start; text-align: left; font: inherit; color: var(--ink);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; cursor: pointer;
+}
+.opt:hover:not([disabled]) { border-color: var(--orange); }
+.opt-mark { flex: none; width: 18px; height: 18px; margin-top: 3px; border-radius: 50%; border: 2px solid var(--muted); }
+.opt.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.is-wrong .opt-mark { border-color: var(--bad); background: var(--bad); }
+.opt.is-right { border-color: var(--ok); background: var(--ok-soft); }
+.opt.is-right .opt-mark { border-color: var(--ok); background: var(--ok); }
+.opt[disabled] { cursor: default; }
+.q-fb:not(:empty) { border-radius: 8px; padding: 10px 14px 0; margin-bottom: 10px; background: var(--navy-soft); }
+.q-fb.fb-right { background: var(--ok-soft); }
+.q-score { font-weight: 600; color: var(--navy); }
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .hero-in { padding: 26px 18px 24px; }
+  .home-mark { display: inline; }
+  .home-label { display: none; }
+  .home-link { padding: 5px 10px; }
+  .layout { padding: 16px; }
+  .content h2 { font-size: 24px; }
+  .chain { padding-left: 24px; }
+  .step-dot { left: -24px; width: 16px; height: 16px; }
+  .chain::before { left: 7px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print {
+  .toc, .theme-btn, .home-link, .copy, .reveal { display: none !important; }
+  .layout { display: block; }
+  .content { max-width: none; }
+  .code, .task, .predict, .step, .anti { break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-in">
+    <div class="hero-top">
+      <p class="hero-course">Java Core, 03 Introduction to OOP</p>
+      <div class="hero-actions">
+        <a class="home-link" href="../index.html" aria-label="На головну"><span class="home-mark" aria-hidden="true">←</span><span class="home-label">На головну</span></a>
+        <button type="button" class="theme-btn" aria-label="Змінити тему">Змінити тему</button>
+      </div>
+    </div>
+    <h1>Вступ до ООП: класи та об'єкти</h1>
+    <p class="hero-sub">Як описати власний тип даних, захистити його стан від некоректних змін і зібрати поведінку поруч із даними, з якими вона працює</p>
+    <div class="hero-meta"><span>Рівень: Початковий</span><span>Версії: Java 25 LTS</span><span>Актуально на 6 жовтня 2026</span></div>
+  </div>
+</header>
+<div class="layout">
+  <nav class="toc" aria-label="Зміст">
+    <details class="toc-box" open>
+      <summary>Зміст</summary>
+      <ol><li class="toc-l2"><a href="#s1">Навіщо потрібні класи</a></li><li class="toc-l2"><a href="#s2">Клас і об'єкт</a></li><li class="toc-l2"><a href="#s3">Анатомія класу</a></li><li class="toc-l2"><a href="#s4">Правила оформлення коду</a></li><li class="toc-l3"><a href="#s5">Вимоги до файлу з кодом</a></li><li class="toc-l3"><a href="#s6">Іменування</a></li><li class="toc-l3"><a href="#s7">Оголошення змінних</a></li><li class="toc-l3"><a href="#s8">Документаційні коментарі</a></li><li class="toc-l2"><a href="#s9">Доступ до даних</a></li><li class="toc-l2"><a href="#s10">Інкапсуляція</a></li><li class="toc-l3"><a href="#s11">Чому публічні поля — погана ідея</a></li><li class="toc-l3"><a href="#s12">Що таке інкапсуляція</a></li><li class="toc-l3"><a href="#s13">Геттери і сеттери</a></li><li class="toc-l3"><a href="#s14">Незмінний інтерфейс, змінна реалізація</a></li><li class="toc-l2"><a href="#s15">Методи</a></li><li class="toc-l3"><a href="#s16">Заголовок, сигнатура і тіло</a></li><li class="toc-l3"><a href="#s17">Перевантаження методів</a></li><li class="toc-l3"><a href="#s18">Змінна кількість аргументів</a></li><li class="toc-l2"><a href="#s19">Ключове слово this</a></li><li class="toc-l2"><a href="#s20">Ключове слово static</a></li><li class="toc-l3"><a href="#s21">Члени класу і члени об'єкта</a></li><li class="toc-l3"><a href="#s22">Статичний блок</a></li><li class="toc-l2"><a href="#s23">Ключове слово final</a></li><li class="toc-l3"><a href="#s24">Поля, які не можна змінити</a></li><li class="toc-l3"><a href="#s25">Константи</a></li><li class="toc-l3"><a href="#s26">final для змінної-посилання</a></li><li class="toc-l2"><a href="#s27">Посилання на об'єкти</a></li><li class="toc-l3"><a href="#s28">Присвоєння копіює посилання, а не об'єкт</a></li><li class="toc-l3"><a href="#s29">Стек і купа</a></li><li class="toc-l3"><a href="#s30">Збирання сміття</a></li><li class="toc-l3"><a href="#s31">null і NullPointerException</a></li><li class="toc-l3"><a href="#s32">Порівняння об'єктів через ==</a></li><li class="toc-l2"><a href="#s33">Області видимості й час життя змінних</a></li><li class="toc-l2"><a href="#s34">Передавання аргументів у метод</a></li><li class="toc-l2"><a href="#s35">Конструктори</a></li><li class="toc-l3"><a href="#s36">Лічильник об'єктів і оператор new</a></li><li class="toc-l3"><a href="#s37">Виклик одного конструктора з іншого</a></li><li class="toc-l2"><a href="#s38">Метод toString()</a></li><li class="toc-l2"><a href="#s39">Повний приклад: рейтинг студентів</a></li><li class="toc-l2"><a href="#s40">Практика</a></li><li class="toc-l2"><a href="#s41">Підсумок</a></li><li class="toc-l2"><a href="#s42">Самоперевірка</a></li><li class="toc-l2"><a href="#s43">Джерела</a></li></ol>
+    </details>
+  </nav>
+  <main class="content">
+<h2 id="s1">Навіщо потрібні класи</h2><p>У перших модулях програма була набором змінних і команд у методі <code>main</code>. Поки даних мало, це працює. Але уявіть, що треба описати студента: прізвище, ім'я, вік, список курсів. Для одного студента це чотири змінні, для двох уже вісім, і нічого в коді не підказує, що <code>lastName2</code> і <code>age2</code> належать одній людині. Ще гірше з діями: метод «скласти іспит» має працювати саме з даними конкретного студента, а не з довільним набором змінних.</p><p>Об'єктно-орієнтоване програмування (object-oriented programming, ООП) пропонує інший підхід: спочатку описати новий тип даних, у якому дані й дії над ними зібрані разом, а потім створювати стільки екземплярів цього типу, скільки потрібно. Цей опис називається класом.</p><div class="chain"><section class="step step-problem"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Проблема</h4><p>Пов'язані дані розкидані по окремих змінних, і програміст мусить сам пам'ятати, яка змінна до чого належить. Дії над цими даними живуть окремо від них і можуть отримати «чужі» значення.</p></div></section><section class="step step-why"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Чому так стається</h4><p>Мова до цього модуля знала лише вбудовані типи: <code>int</code>, <code>double</code>, <code>boolean</code>, <code>String</code>. Типу «студент» у ній немає, тому компілятор не може ні згрупувати дані, ні перевірити, що метод працює саме зі студентом.</p></div></section><section class="step step-solution"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Рішення</h4><p>Описати власний тип, тобто клас. Клас (class) — це шаблон, за яким створюються об'єкти. Об'єкт (object) — це програмна одиниця, що поєднує пов'язаний стан (значення полів) і поведінку (методи).</p></div></section><section class="step step-when"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Коли застосовувати</h4><p>Щоразу, коли кілька значень описують одну сутність і над ними виконуються спільні дії: студент, товар у магазині, банківський рахунок, повідомлення в чаті.</p></div></section></div><h2 id="s2">Клас і об'єкт</h2><p>Найпростіше розрізняти ці поняття через питання «що має» і «що вміє». Клас <code>Student</code> каже: кожен студент <strong>має</strong> прізвище, ім'я, вік і список курсів та <strong>вміє</strong> складати іспит і записуватися на курс. Це опис, у ньому немає жодного конкретного прізвища.</p><p>Об'єкт — це конкретний студент, створений за цим описом. Наприклад, <code>student1</code> має прізвище Petrenko, ім'я Ostap, вік 19 і курси Java та MQC, а <code>student2</code> — прізвище Romaniv, ім'я Maryna, вік 21 і курси Java та ATQC. Обидва об'єкти мають однаковий набір полів, бо створені за одним класом, але значення в полях у кожного свої.</p><div class="diagram"><svg viewBox="0 0 720 250" width="100%" style="max-width:720px;display:block;margin:0 auto" role="img" aria-label="Клас Student і два об'єкти, створені через new">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--orange)"/></marker></defs>
+<rect x="10" y="45" width="260" height="160" rx="10" fill="var(--navy-soft)" stroke="var(--navy)" stroke-width="1.5"/>
+<text x="26" y="73" font-family="var(--sans)" font-size="15" font-weight="600" fill="var(--navy)">Клас Student</text>
+<text x="26" y="95" font-family="var(--sans)" font-size="14" font-weight="400" fill="var(--ink)">має:</text>
+<text x="26" y="117" font-family="var(--mono)" font-size="14" font-weight="400" fill="var(--ink)">lastName, firstName, age</text>
+<text x="26" y="139" font-family="var(--sans)" font-size="14" font-weight="400" fill="var(--ink)">вміє:</text>
+<text x="26" y="161" font-family="var(--mono)" font-size="14" font-weight="400" fill="var(--ink)">passExam(), enroll()</text>
+<rect x="440" y="10" width="270" height="90" rx="10" fill="var(--orange-soft)" stroke="var(--orange)" stroke-width="1.5"/>
+<text x="456" y="38" font-family="var(--sans)" font-size="15" font-weight="600" fill="var(--orange)">Об'єкт student1</text>
+<text x="456" y="60" font-family="var(--mono)" font-size="14" font-weight="400" fill="var(--ink)">Petrenko, Ostap, 19</text>
+<rect x="440" y="150" width="270" height="90" rx="10" fill="var(--orange-soft)" stroke="var(--orange)" stroke-width="1.5"/>
+<text x="456" y="178" font-family="var(--sans)" font-size="15" font-weight="600" fill="var(--orange)">Об'єкт student2</text>
+<text x="456" y="200" font-family="var(--mono)" font-size="14" font-weight="400" fill="var(--ink)">Romaniv, Maryna, 21</text>
+<line x1="272" y1="105" x2="436" y2="58" stroke="var(--orange)" stroke-width="2" marker-end="url(#ah)"/><text x="354.0" y="67.5" text-anchor="middle" font-family="var(--mono)" font-size="14" font-weight="600" fill="var(--orange)">new</text>
+<line x1="272" y1="145" x2="436" y2="192" stroke="var(--orange)" stroke-width="2" marker-end="url(#ah)"/><text x="354.0" y="154.5" text-anchor="middle" font-family="var(--mono)" font-size="14" font-weight="600" fill="var(--orange)">new</text>
+</svg></div><p>Корисна аналогія — креслення будинку і самі будинки. За одним кресленням можна звести цілу вулицю будинків, і в кожному буде своя кольорова фарба на стінах і свої мешканці. Креслення ж нікого не вміщує, воно лише описує, що в будинку буде.</p><aside class="callout callout-note"><h4>Список курсів</h4><p>У прикладі зі слайда студент має «список курсів». Щоб зберегти кілька значень в одному полі, потрібні масиви (модуль 05) або колекції (модуль 11). У цьому конспекті ми працюємо з полями, які зберігають одне значення.</p></aside><h2 id="s3">Анатомія класу</h2><p>Клас складається з трьох основних частин: полів, конструкторів і методів. Загальний шаблон виглядає так:</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">&lt;модифікатор доступу&gt; class ClassName {
+    // поля
+    &lt;модифікатор доступу&gt; &lt;тип даних&gt; variable1;
+
+    // конструктори
+    &lt;модифікатор доступу&gt; ClassName(&lt;параметри&gt;) {
+        // тіло конструктора
+    }
+
+    // методи
+    &lt;модифікатор доступу&gt; &lt;тип результату&gt; method1(&lt;параметри&gt;) {
+        // тіло методу
+    }
+}</code></pre></figure><p>Поля (fields) зберігають стан об'єкта: те, що об'єкт «має». Конструктори (constructors) виконуються в момент створення об'єкта і задають його початковий стан. Методи (methods) описують поведінку: те, що об'єкт «вміє». Ось так шаблон виглядає для студента:</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private String lastName;
+    private String firstName;
+    private int age;
+
+    public Student() {
+    }
+
+    public Student(String lastName, String firstName, int age) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.age = age;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}</code></pre></figure><p>Клас сам по собі нічого не робить, його треба використати. Для цього створімо окремий клас <code>Main</code> з методом <code>main</code>, а в ньому два об'єкти. Об'єкт створюється оператором <code>new</code>, після якого йде виклик конструктора:</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student first = new Student(&quot;Petrenko&quot;, &quot;Ostap&quot;, 19);
+        Student second = new Student(&quot;Romaniv&quot;, &quot;Maryna&quot;, 21);
+        System.out.println(first.getFirstName() + &quot; &quot; + first.getLastName() + &quot;, &quot; + first.getAge());
+        System.out.println(second.getFirstName() + &quot; &quot; + second.getLastName() + &quot;, &quot; + second.getAge());
+
+        Student empty = new Student();
+        System.out.println(empty.getFirstName() + &quot; &quot; + empty.getLastName() + &quot;, &quot; + empty.getAge());
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Ostap Petrenko, 19
+Maryna Romaniv, 21
+null null, 0</pre></div></figure><p>Зверніть увагу на останній рядок. Об'єкт <code>empty</code> створено конструктором без параметрів, який нічого не присвоює, проте програма не впала і надрукувала <code>null null, 0</code>. Річ у тому, що поля, на відміну від локальних змінних методу, завжди отримують значення за замовчуванням: <code>0</code> для цілих чисел, <code>0.0</code> для <code>double</code>, <code>false</code> для <code>boolean</code>, <code>'\u0000'</code> для <code>char</code> і <code>null</code> для будь-якого посилального типу, зокрема <code>String</code>. Значення <code>null</code> означає «посилання нікуди не вказує», тобто рядка ще немає. Локальна змінна без присвоєного значення, навпаки, не скомпілюється, якщо її спробувати прочитати.</p><details class="more"><summary>Чому змінна має тип класу</summary><p>Рядок <code>Student first = new Student(...)</code> виконує дві окремі дії. Права частина, <code>new Student(...)</code>, створює об'єкт у пам'яті. Ліва частина оголошує змінну <code>first</code> типу <code>Student</code>, і в неї записується <strong>посилання</strong> на щойно створений об'єкт, а не сам об'єкт. Саме тому типи на кшталт <code>Student</code> чи <code>String</code> називають посилальними (reference types). Що з цього випливає на практиці, детально розбирається в розділі «Посилання на об'єкти».</p></details><h2 id="s4">Правила оформлення коду</h2><p>Компілятор приймає код будь-якого вигляду, якщо він синтаксично правильний. Але код читають люди, і значно частіше, ніж пишуть. Тому в Java є усталені домовленості (code conventions), яких дотримуються практично всі команди. Слайди спираються на класичний документ Oracle «Code Conventions for the Java Programming Language».</p><h3 id="s5">Вимоги до файлу з кодом</h3><p>Деякі правила обов'язкові, бо їх перевіряє компілятор. Файл <code>.java</code> може містити лише один клас із модифікатором <code>public</code>, і ім'я цього класу має точно, з урахуванням регістру, збігатися з ім'ям файлу без розширення: клас <code>public class Student</code> живе у файлі <code>Student.java</code>. Непублічних класів у файлі може бути скільки завгодно, проте домовленості більшості команд вимагають тримати в одному файлі один клас верхнього рівня. Так клас завжди легко знайти за ім'ям файлу.</p><p>Решта правил — це домовленості про читабельність. Файл складається з секцій, розділених порожніми рядками. Файли довші за 2000 рядків вважаються громіздкими, і це сигнал, що клас робить забагато. Секції йдуть у такому порядку:</p><ol><li>Початкові коментарі (наприклад, інформація про авторство чи ліцензію).</li><li>Оголошення пакета <code>package</code> та імпорти <code>import</code>.</li><li>Документаційний коментар класу <code>/** ... */</code>.</li><li>Оголошення класу.</li><li>Статичні поля класу (про <code>static</code> мова піде нижче).</li><li>Поля екземпляра: спочатку <code>public</code>, потім <code>protected</code>, потім без модифікатора, потім <code>private</code>.</li><li>Конструктори.</li><li>Методи, згруповані за призначенням, а не за модифікатором доступу.</li></ol><p>Перший рядок файлу без коментаря зазвичай <code>package</code>, далі імпорти, наприклад <code>import java.util.Scanner;</code>.</p><h3 id="s6">Іменування</h3><p>Імена пакетів пишуться малими літерами й починаються з доменного імені організації у зворотному порядку: <code>com.example.school</code>, <code>org.example.shop</code>. Перший компонент — це домен верхнього рівня (<code>com</code>, <code>org</code>, <code>net</code>, <code>edu</code> тощо), подальші компоненти визначає сама організація.</p><p>Імена класів — іменники, кожне слово з великої літери (UpperCamelCase): <code>Student</code>, <code>ImageSprite</code>, <code>SalesReport</code>. Варто уникати скорочень і абревіатур: <code>StudentRecord</code> зрозуміліше за <code>StdRec</code>.</p><p>Імена методів — дієслова, перше слово з малої літери, наступні з великої (lowerCamelCase): <code>getBackground()</code>, <code>calculateTotal()</code>, <code>passExam()</code>. Імена змінних і полів пишуться так само, але це зазвичай іменники: <code>firstName</code>, <code>totalRating</code>.</p><p>Імена констант пишуться повністю великими літерами, а слова розділяються підкресленням: <code>MAX_RATING</code>, <code>BONUS_PERCENT</code>. Що таке константа в Java і як її оголосити, розглянуто в розділі «Ключове слово final».</p><h3 id="s7">Оголошення змінних</h3><p>Одне оголошення на рядок: так кожну змінну можна прокоментувати, і її легко знайти.</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">int level; // рівень вкладеності
+int size;  // розмір таблиці</code></pre></figure><p>Локальні змінні варто ініціалізувати одразу в рядку оголошення, якщо початкове значення вже відоме. Класичні домовленості Oracle радять розміщувати оголошення на початку блоку <code>{ ... }</code>. Сучасні посібники, наприклад Google Java Style Guide, натомість радять оголошувати локальну змінну якомога ближче до місця першого використання. Обидва підходи переслідують одну мету — щоб читач одразу бачив, звідки береться значення, тому в команді важливо обрати один і дотримуватися його.</p><details class="more"><summary>Попередній перегляд: правила для масивів і циклів (модуль 05)</summary><p>Слайд згадує ще два правила, які стануть актуальними в модулі 05. Перше: не змішувати в одному оголошенні звичайну змінну й масив, як у <code>int foo, fooarray[];</code> — таке оголошення легко прочитати неправильно. Друге: лічильник циклу <code>for</code> оголошують прямо в заголовку циклу, <code>for (int i = 0; i &lt; max; i++)</code>, і це єдиний виняток з правила «оголошення на початку блоку».</p></details><h3 id="s8">Документаційні коментарі</h3><p>Серед секцій файлу згадано документаційний коментар <code>/** ... */</code>. Від звичайного багаторядкового коментаря <code>/* ... */</code> він відрізняється другою зірочкою на початку і тим, що його читають інструменти. Утиліта <code>javadoc</code> з JDK збирає такі коментарі в HTML-документацію, а IDE показує їх у підказці, коли ви наводите курсор на ім'я класу чи методу або набираєте його виклик. Саме так ви бачите опис <code>System.out.println</code> чи <code>Math.max</code> прямо в редакторі: це Javadoc стандартної бібліотеки.</p><p>Документаційний коментар ставлять безпосередньо перед тим, що він описує: класом, конструктором, методом або полем. Перше речення коротко каже, що робить елемент, бо саме воно потрапляє в зведені списки документації. Далі йдуть теги, кожен з нового рядка: <code>@param</code> описує параметр (ім'я параметра, потім пояснення), <code>@return</code> описує значення, яке повертає метод.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Temperature.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">/**
+ * Температура, яку можна отримати в різних шкалах.
+ */
+public class Temperature {
+    private double celsius;
+
+    /**
+     * Створює температуру із заданим значенням у градусах Цельсія.
+     *
+     * @param celsius температура в градусах Цельсія
+     */
+    public Temperature(double celsius) {
+        this.celsius = celsius;
+    }
+
+    /**
+     * Повертає температуру в градусах Фаренгейта.
+     *
+     * @return температура за шкалою Фаренгейта
+     */
+    public double getFahrenheit() {
+        return celsius * 9 / 5 + 32;
+    }
+}</code></pre></figure><p>Документують насамперед публічні класи й методи, тобто те, чим користуватимуться інші. Коментар має пояснювати, що робить метод і що означають параметри, а не переказувати код: опис «повертає celsius помножене на 9» нічого не додає до самого рядка коду. Для очевидних геттерів і сеттерів Javadoc часто не пишуть.</p><h2 id="s9">Доступ до даних</h2><p>Перед кожним полем, конструктором і методом може стояти модифікатор доступу (access modifier). Він визначає, з якого місця програми до цього члена класу можна звернутися. У Java чотири рівні доступу, від найсуворішого до найвільнішого.</p><p>Модифікатор <code>private</code> робить член видимим лише всередині того самого класу. Жоден інший клас, навіть розміщений у тому самому файлі, не може звернутися до приватного поля напряму.</p><p>Відсутність модифікатора означає доступ на рівні пакета (package-private, його ще називають default). Пакет — це група класів, що лежать в одній папці й мають однаковий рядок <code>package</code>. До такого члена можуть звертатися всі класи того самого пакета, а класи з інших пакетів — ні.</p><p>Модифікатор <code>protected</code> дає все те саме, що доступ на рівні пакета, і додатково відкриває член для класів-нащадків з інших пакетів.</p><p>Модифікатор <code>public</code> робить член видимим звідусіль, з будь-якого класу будь-якого пакета.</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    protected String lastName; // пакет + нащадки
+    String firstName;          // лише пакет
+    private int age;           // лише цей клас
+
+    public void print() {      // звідусіль
+    }
+}</code></pre></figure><p>У цьому фрагменті модифікатор стоїть першим, далі тип даних (<code>String</code>, <code>int</code>, а для методу <code>void</code>), далі ім'я.</p><details class="more"><summary>Попередній перегляд: нащадки і protected (модуль 07)</summary><p>Нащадок, або підклас (subclass), — це клас, створений на основі іншого класу за допомогою ключового слова <code>extends</code>. Він успадковує поля й методи батьківського класу. Саме для нього існує окремий рівень <code>protected</code>. Наслідування детально розбирається в модулі 07, а до того часу на практиці вистачить <code>private</code> для полів і <code>public</code> для методів і конструкторів.</p></details><h2 id="s10">Інкапсуляція</h2><h3 id="s11">Чому публічні поля — погана ідея</h3><p>Найпростіший спосіб дати доступ до даних — зробити всі поля публічними. Код компілюється і працює, але саме тому слайд позначає його як «Don't make so!».</p><section class="anti"><div class="anti-bad"><h4>Антипатерн: Публічні поля</h4><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    public String firstName;
+    public String lastName;
+    public int age;
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student student = new Student();
+        student.firstName = &quot;Alice&quot;;
+        student.lastName = &quot;Shevchenko&quot;;
+        student.age = -5;
+        System.out.println(student.firstName + &quot; &quot; + student.lastName + &quot;, вік: &quot; + student.age);
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Alice Shevchenko, вік: -5</pre></div></figure><p>Будь-який код у програмі може записати в поле будь-яке значення, зокрема безглузде на кшталт від'ємного віку, і клас ніяк цьому не завадить. Помилка проявиться не там, де її зробили, а пізніше, у місці, яке це значення прочитає. До того ж усі місця, що звертаються до <code>student.age</code> напряму, жорстко прив'язані до того, як саме клас зберігає дані: перейменування чи зміна типу поля зламає їх усі одночасно.</p></div><div class="anti-fix"><h4>Як правильно</h4><p>Поля роблять <code>private</code>, а доступ до них відкривають через методи. Як саме — у наступних підрозділах.</p></div></section><h3 id="s12">Що таке інкапсуляція</h3><div class="chain"><section class="step step-problem"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Проблема</h4><p>Стан об'єкта можна змінити ззовні в обхід будь-яких правил, і клас не контролює, що саме лежить у його полях.</p></div></section><section class="step step-why"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Чому так стається</h4><p>Публічне поле — це просто комірка пам'яті, відкрита для запису всім. Між зовнішнім кодом і даними немає жодного місця, де можна було б перевірити чи перетворити значення.</p></div></section><section class="step step-solution"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Рішення</h4><p>Інкапсуляція (encapsulation) — це механізм, який об'єднує дані (поля) і код, що з ними працює (методи), в одне ціле і приховує стан об'єкта від прямого доступу ззовні. На практиці це означає: поля <code>private</code>, а все, що зовнішньому коду дозволено робити з даними, оформлено як <code>public</code> методи.</p></div></section><section class="step step-when"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Коли застосовувати</h4><p>За замовчуванням для всіх полів класу. Відкривати поле напряму доводиться рідко, і такий вибір має бути свідомим.</p></div></section></div><p>Інкапсуляція дає три конкретні переваги. Поле можна зробити лише для читання (є метод, що повертає значення, але немає методу, що змінює) або лише для запису. Клас повністю контролює, що зберігається в його полях, бо кожна зміна проходить через його власний метод. І нарешті, публічні методи класу залишаються незмінними, навіть коли змінюється внутрішня реалізація, тож код, який цим класом користується, не доводиться переписувати.</p><h3 id="s13">Геттери і сеттери</h3><p>Методи, які дають доступ до приватних полів, мають усталені назви. Геттер (getter) повертає значення поля і називається <code>get</code> + ім'я поля з великої літери: <code>getFirstName()</code>. Сеттер (setter) змінює значення поля, приймає нове значення параметром і називається <code>set</code> + ім'я поля: <code>setAge(int age)</code>. Для полів типу <code>boolean</code> геттер зазвичай називають з префіксом <code>is</code>: <code>isActive()</code>.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private String id;
+    private String firstName;
+    private int age;
+
+    public Student(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = Math.max(0, age);
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student student = new Student(&quot;ST-001&quot;);
+        student.setFirstName(&quot;Alice&quot;);
+        student.setAge(-5);
+        System.out.println(student.getId() + &quot;: &quot; + student.getFirstName() + &quot;, вік: &quot; + student.getAge());
+        student.setAge(22);
+        System.out.println(student.getId() + &quot;: &quot; + student.getFirstName() + &quot;, вік: &quot; + student.getAge());
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>ST-001: Alice, вік: 0
+ST-001: Alice, вік: 22</pre></div></figure><p>Цей клас демонструє обидві можливості інкапсуляції. Поле <code>id</code> задається один раз у конструкторі й має лише геттер, тому після створення об'єкта змінити ідентифікатор неможливо: поле доступне тільки для читання. Сеттер <code>setAge</code> не записує значення бездумно, а пропускає його через <code>Math.max(0, age)</code>, тож від'ємний вік перетворюється на <code>0</code>. Зовнішній код не може обійти цю перевірку, бо поле <code>age</code> приватне.</p><aside class="callout callout-note"><h4>Перевірки в сеттерах</h4><p>Заміна некоректного значення на <code>0</code> — найпростіший варіант контролю, доступний без умовних операторів. Після модуля 04 сеттер зможе перевіряти значення за допомогою <code>if</code>, а після модуля 09 — повідомляти про некоректні дані винятком, що зазвичай і роблять у реальних проєктах.</p></aside><h3 id="s14">Незмінний інтерфейс, змінна реалізація</h3><p>Третя перевага інкапсуляції найменш очевидна, тому розгляньмо її на прикладі. Клас <code>Temperature</code> зберігає температуру і вміє віддавати її в градусах Цельсія та Фаренгейта.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Temperature.java (версія 1)</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Temperature {
+    private double celsius;
+
+    public Temperature(double celsius) {
+        this.celsius = celsius;
+    }
+
+    public double getCelsius() {
+        return celsius;
+    }
+
+    public double getFahrenheit() {
+        return celsius * 9 / 5 + 32;
+    }
+}</code></pre></figure><p>Згодом вирішили зберігати температуру в кельвінах. Поле змінилося, але конструктор і обидва публічні методи мають ті самі сигнатури:</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Temperature.java (версія 2)</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Temperature {
+    private double kelvin;
+
+    public Temperature(double celsius) {
+        this.kelvin = celsius + 273.15;
+    }
+
+    public double getCelsius() {
+        return kelvin - 273.15;
+    }
+
+    public double getFahrenheit() {
+        return getCelsius() * 9 / 5 + 32;
+    }
+}</code></pre></figure><p>Код, який користується класом, не змінився ні на символ і працює з обома версіями однаково:</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Temperature t = new Temperature(25.0);
+        System.out.println(&quot;Цельсій: &quot; + t.getCelsius());
+        System.out.println(&quot;Фаренгейт: &quot; + t.getFahrenheit());
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Цельсій: 25.0
+Фаренгейт: 77.0</pre></div></figure><p>Якби поле <code>celsius</code> було публічним і зовнішній код читав його напряму, перехід на кельвіни зламав би кожне таке місце. Публічні методи утворюють «контракт» класу, а поля залишаються його внутрішньою справою.</p><h2 id="s15">Методи</h2><p>Метод — це іменований блок коду, який виконується в контексті конкретного об'єкта. Звідси важлива властивість: метод екземпляра завжди має повний доступ до всіх полів свого об'єкта, зокрема приватних. Коли ми пишемо <code>first.getAge()</code>, метод <code>getAge</code> повертає вік саме об'єкта <code>first</code>, а не якогось іншого студента.</p><p>Більшість методів належить до одного з двох видів. Методи доступу (accessor methods) повертають інформацію про об'єкт і не змінюють його; типовий приклад — геттери. Методи-модифікатори (mutator methods) змінюють стан об'єкта, тобто значення його полів; типовий приклад — сеттери.</p><h3 id="s16">Заголовок, сигнатура і тіло</h3><p>Оголошення методу складається із заголовка (method header) і тіла (method body). Розберемо заголовок <code>public int sum(int a, int b)</code>:</p><ul><li><code>public</code> — модифікатор доступу;</li><li><code>int</code> — тип результату, тобто тип значення, яке метод повертає через <code>return</code>; якщо метод нічого не повертає, пишуть <code>void</code>;</li><li><code>sum</code> — ім'я методу;</li><li><code>(int a, int b)</code> — список параметрів у дужках, можливо порожній.</li></ul><p>Ім'я методу разом зі списком типів параметрів називається сигнатурою (method signature). У прикладі сигнатура — це <code>sum(int, int)</code>. Тип результату й модифікатор доступу до сигнатури не входять, і це важливо для наступного розділу. Тіло методу — код у фігурних дужках, що виконується під час виклику.</p><aside class="callout callout-tip"><h4>Повертайте значення, а не друкуйте</h4><p>Метод, який обчислює результат, краще робити таким, що повертає значення через <code>return</code>, а друк залишати методу <code>main</code>. Тоді результат можна надрукувати, зберегти в змінну, передати в інший метод або перевірити тестом. Метод, який сам друкує, годиться лише для одного сценарію.</p></aside><h3 id="s17">Перевантаження методів</h3><div class="chain"><section class="step step-problem"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Проблема</h4><p>Та сама дія буває потрібна з різними вхідними даними: повідомлення без тексту, з текстом, з текстом і автором. Вигадувати для кожного варіанта окреме ім'я (<code>formatEmpty</code>, <code>formatText</code>, <code>formatTextWithAuthor</code>) незручно, бо читач мусить пам'ятати всі ці назви.</p></div></section><section class="step step-why"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Чому так стається</h4><p>Компілятор розрізняє методи не лише за ім'ям, а за всією сигнатурою, тобто за ім'ям разом зі списком типів параметрів. Отже, кілька методів можуть мати однакове ім'я, якщо списки параметрів відрізняються.</p></div></section><section class="step step-solution"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Рішення</h4><p>Перевантаження методів (method overloading) — це оголошення в одному класі кількох методів з однаковим ім'ям, але різними параметрами: різною кількістю, різними типами або різним порядком типів. Який саме метод викликати, компілятор вирішує за аргументами виклику.</p></div></section><section class="step step-when"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Коли застосовувати</h4><p>Коли методи виконують по суті одну дію і різняться лише набором вхідних даних. Якщо ж дії різні, краще дати різні імена, інакше перевантаження заплутує.</p></div></section></div><p>У прикладі зі слайда третій варіант методу друкує повідомлення кілька разів за допомогою циклу. Цикли ми вивчатимемо в модулі 05, тому тут третій варіант приймає автора повідомлення. До того ж методи повертають рядок замість друку, як радить порада вище.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">MessageFormatter.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class MessageFormatter {
+    public String format() {
+        return &quot;No message provided&quot;;
+    }
+
+    public String format(String message) {
+        return &quot;Message: &quot; + message;
+    }
+
+    public String format(String message, String author) {
+        return &quot;Message: &quot; + message + &quot; (from &quot; + author + &quot;)&quot;;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        MessageFormatter formatter = new MessageFormatter();
+        System.out.println(formatter.format());
+        System.out.println(formatter.format(&quot;Hello, world!&quot;));
+        System.out.println(formatter.format(&quot;Java is awesome!&quot;, &quot;Alice&quot;));
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>No message provided
+Message: Hello, world!
+Message: Java is awesome! (from Alice)</pre></div></figure><p>Компілятор бачить три виклики з нулем, одним і двома аргументами типу <code>String</code> і для кожного знаходить метод із відповідною сигнатурою. Цей вибір відбувається під час компіляції, а не під час виконання програми.</p><section class="predict"><h4>Що виведе програма?</h4><p>Перевантаження можливе і за типами параметрів. Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        System.out.println(describe(7));
+        System.out.println(describe(7.0));
+        System.out.println(describe('A'));
+    }
+
+    static String describe(int value) {
+        return &quot;int: &quot; + value;
+    }
+
+    static String describe(double value) {
+        return &quot;double: &quot; + value;
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>int: 7
+double: 7.0
+int: 65</pre></div><p>Літерал <code>7</code> має тип <code>int</code>, тому обирається <code>describe(int)</code>. Літерал <code>7.0</code> має тип <code>double</code>, тому обирається <code>describe(double)</code>. Найцікавіший третій виклик: методу для <code>char</code> немає, і компілятор шукає варіант, до якого <code>char</code> можна розширити без втрати даних. Тип <code>char</code> автоматично перетворюється на <code>int</code> (це найближче розширення), а символ <code>'A'</code> має код <code>65</code>. Тому викликається <code>describe(int)</code> зі значенням <code>65</code>, а не, наприклад, помилка компіляції.</p></div></section><section class="anti"><div class="anti-bad"><h4>Антипатерн: Перевантаження лише за типом результату</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">static int parse(String text) {
+    return 0;
+}
+
+static double parse(String text) {
+    return 0.0;
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>error: method parse(String) is already defined in class Main</pre></div></figure><p>Тип результату не входить у сигнатуру, тому для компілятора обидва методи мають однакову сигнатуру <code>parse(String)</code>. Крім того, з виклику <code>parse(&quot;5&quot;)</code> неможливо зрозуміти, який варіант мався на увазі, особливо якщо результат узагалі нікуди не присвоюється.</p></div><div class="anti-fix"><h4>Як правильно</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">static int parseInt(String text) {
+    return 0;
+}
+
+static double parseDouble(String text) {
+    return 0.0;
+}</code></pre></figure><p>Якщо методи відрізняються лише тим, що повертають, вони виконують різні дії, і їм потрібні різні імена.</p></div></section><h3 id="s18">Змінна кількість аргументів</h3><p>Слайд згадує ще одну можливість методів — змінну кількість аргументів (varargs). Вона спирається на масиви, тому тут подано лише короткий огляд.</p><details class="more"><summary>Попередній перегляд: varargs (модуль 05)</summary><p>Інколи заздалегідь невідомо, скільки аргументів отримає метод. Для цього останній параметр можна оголосити з трикрапкою після типу: <code>Object... messages</code>. Тоді метод приймає нуль або більше аргументів цього типу. Такий параметр може бути лише один, і він завжди останній у списку. Усередині методу параметр є масивом, тому для перебору значень потрібен цикл.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Util.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Util {
+    public static void print(String welcomeMessage, Object... messages) {
+        System.out.println(welcomeMessage + &quot; (додаткових аргументів: &quot; + messages.length + &quot;)&quot;);
+        for (Object msg : messages) {
+            System.out.println(msg);
+        }
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Util.print(&quot;Hello&quot;, &quot;Hi&quot;, &quot;Welcome&quot;, 10, 20.5, false);
+        Util.print(&quot;Порожньо&quot;);
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Hello (додаткових аргументів: 5)
+Hi
+Welcome
+10
+20.5
+false
+Порожньо (додаткових аргументів: 0)</pre></div></figure><p>Перший аргумент <code>&quot;Hello&quot;</code> потрапляє в параметр <code>welcomeMessage</code>, а всі інші, скільки б їх не було, збираються в <code>messages</code>. Тип <code>Object</code> дозволяє передати значення будь-якого типу. Масиви та цикл <code>for</code> розбираються в модулі 05.</p></details><h2 id="s19">Ключове слово this</h2><p>Усередині методу чи конструктора часто трапляються дві змінні з однаковим ім'ям: поле класу і параметр. Наприклад, сеттер <code>setName(String name)</code> має параметр <code>name</code>, а клас має поле <code>name</code>.</p><div class="chain"><section class="step step-problem"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Проблема</h4><p>Коли ім'я параметра збігається з ім'ям поля, просто <code>name</code> усередині методу означає параметр, а поле стає недосяжним за цим ім'ям.</p></div></section><section class="step step-why"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Чому так стається</h4><p>Java шукає змінну спочатку в найближчій області видимості. Параметр методу ближчий за поле класу, тому він «затіняє» поле (це називають shadowing).</p></div></section><section class="step step-solution"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Рішення</h4><p>Ключове слово <code>this</code> — це посилання на поточний об'єкт, тобто на той, для якого викликано метод. Вираз <code>this.name</code> однозначно означає поле об'єкта, а просто <code>name</code> — параметр.</p></div></section><section class="step step-when"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Коли застосовувати</h4><p>Насамперед у конструкторах і сеттерах, де параметр навмисно названо так само, як поле. Там, де конфлікту імен немає, <code>this</code> можна не писати: <code>return name;</code> у геттері однаково поверне поле.</p></div></section></div><section class="anti"><div class="anti-bad"><h4>Антипатерн: Присвоєння без this</h4><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private String name;
+
+    public void setName(String name) {
+        name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student student = new Student();
+        student.setName(&quot;Alice&quot;);
+        System.out.println(student.getName());
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>null</pre></div></figure><p>Рядок <code>name = name;</code> присвоює параметру його ж власне значення, а поле залишається незмінним і має значення за замовчуванням <code>null</code>. Компілятор цей код приймає, бо синтаксично все правильно, тому помилка непомітна, доки хтось не прочитає поле. Сучасні IDE підсвічують такий рядок як підозрілий.</p></div><div class="anti-fix"><h4>Як правильно</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public void setName(String name) {
+    this.name = name;
+}</code></pre></figure><p>Ліворуч від <code>=</code> стоїть поле поточного об'єкта, праворуч — параметр, і значення потрапляє куди треба.</p></div></section><h2 id="s20">Ключове слово static</h2><h3 id="s21">Члени класу і члени об'єкта</h3><p>Досі кожне поле належало конкретному об'єкту: у кожного студента свій вік. Але бувають дані, що стосуються класу загалом, наприклад кількість створених студентів. Зберігати таке число в кожному об'єкті немає сенсу.</p><div class="chain"><section class="step step-problem"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Проблема</h4><p>Потрібне значення, спільне для всіх об'єктів класу, або метод, якому для роботи не потрібен жоден конкретний об'єкт.</p></div></section><section class="step step-why"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Чому так стається</h4><p>Звичайне поле створюється окремо для кожного об'єкта в момент <code>new</code>. Звичайний метод викликається для конкретного об'єкта і працює з його полями. Ні те, ні інше не підходить для даних і дій рівня класу.</p></div></section><section class="step step-solution"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Рішення</h4><p>Ключове слово <code>static</code> відв'язує поле або метод від конкретних об'єктів. Статичне поле існує в одному екземплярі для всього класу, і всі об'єкти бачать одне й те саме значення. Статичний метод можна викликати без створення об'єкта, через ім'я класу: <code>Helper.print()</code>.</p></div></section><section class="step step-when"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Коли застосовувати</h4><p>Для лічильників і інших спільних даних класу, для допоміжних методів, яким досить параметрів (як <code>Math.max</code>), і для методу <code>main</code>, з якого програма стартує ще до створення будь-яких об'єктів.</p></div></section></div><p>Тепер стає зрозуміло, чому метод <code>main</code> завжди оголошено як <code>static</code>: у момент запуску програми ще не існує жодного об'єкта, і JVM має викликати <code>main</code> через ім'я класу.</p><aside class="callout callout-note"><h4>Компактні вихідні файли в Java 25</h4><p>У свіжих туторіалах можна побачити програму, де немає ні оголошення класу, ні <code>public static</code>:</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Hello.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">void main() {
+    IO.println(&quot;Hello&quot;);
+}</code></pre></figure><p>Це компактний вихідний файл (compact source file), який став стандартною можливістю мови в Java 25 (JEP 512). Він призначений для перших кроків і невеликих скриптів: компілятор сам огортає такий код неявним класом, а метод <code>main</code> може бути методом екземпляра, бо JVM сама створить об'єкт. Клас <code>IO</code> з пакета <code>java.lang</code> дає короткі методи для консольного вводу й виводу. У курсі ми пишемо повні класи з <code>public static void main(String[] args)</code>, бо саме так виглядає код у реальних проєктах, і цей код працює в усіх версіях Java.</p></aside><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Counter.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Counter {
+    private static int totalClicks;
+    private int ownClicks;
+
+    public void click() {
+        ownClicks++;
+        totalClicks++;
+    }
+
+    public int getOwnClicks() {
+        return ownClicks;
+    }
+
+    public static int getTotalClicks() {
+        return totalClicks;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Counter a = new Counter();
+        Counter b = new Counter();
+        a.click();
+        a.click();
+        b.click();
+        System.out.println(&quot;a: &quot; + a.getOwnClicks());
+        System.out.println(&quot;b: &quot; + b.getOwnClicks());
+        System.out.println(&quot;усього: &quot; + Counter.getTotalClicks());
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>a: 2
+b: 1
+усього: 3</pre></div></figure><p>Кожен об'єкт має своє поле <code>ownClicks</code>, тому лічильники <code>a</code> і <code>b</code> незалежні. Поле <code>totalClicks</code> одне на весь клас, і обидва об'єкти збільшують одне й те саме значення.</p><section class="anti"><div class="anti-bad"><h4>Антипатерн: Звернення до статичного члена через об'єкт</h4><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Helper.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Helper {
+    private static String message;
+
+    public static void setMessage(String message) {
+        Helper.message = message;
+    }
+
+    public static String getMessage() {
+        return message;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Helper.setMessage(&quot;hello&quot;);
+        System.out.println(Helper.getMessage());
+
+        Helper helper = new Helper();
+        helper.setMessage(&quot;new message&quot;); // не рекомендовано
+        System.out.println(Helper.getMessage());
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>hello
+new message</pre></div></figure><p>Мова дозволяє викликати статичний метод через змінну-об'єкт, і код працює. Але запис <code>helper.setMessage(...)</code> вводить читача в оману: здається, що змінюється стан саме об'єкта <code>helper</code>, хоча насправді змінюється спільне поле класу, яке бачать усі. IDE підсвічує такий виклик попередженням.</p></div><div class="anti-fix"><h4>Як правильно</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">Helper.setMessage(&quot;new message&quot;);</code></pre></figure><p>Звернення через ім'я класу одразу показує, що мова про член класу, а не конкретного об'єкта. Зверніть увагу й на сеттер: оскільки об'єкта немає, <code>this</code> у статичному методі використати не можна, тому поле відрізняють від параметра записом <code>Helper.message</code>.</p></div></section><section class="anti"><div class="anti-bad"><h4>Антипатерн: Поле екземпляра в статичному методі</h4><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    private String name = &quot;Alice&quot;;
+
+    public static void main(String[] args) {
+        System.out.println(name);
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>error: non-static variable name cannot be referenced from a static context</pre></div></figure><p>Поле <code>name</code> існує лише всередині конкретного об'єкта <code>Main</code>, а статичний метод <code>main</code> виконується без будь-якого об'єкта. Компілятор не знає, чиє <code>name</code> друкувати, тому відмовляє. Це одна з найчастіших помилок на початку роботи з класами.</p></div><div class="anti-fix"><h4>Як правильно</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public static void main(String[] args) {
+    Main app = new Main();
+    System.out.println(app.name);
+}</code></pre></figure><p>Спочатку створюємо об'єкт, потім читаємо його поле. Але найкраще рішення — не змішувати: дані та поведінку тримати в окремому класі, а в <code>Main</code> залишити лише створення об'єктів і друк.</p></div></section><h3 id="s22">Статичний блок</h3><p>У класі можна оголосити статичний блок ініціалізації (static initializer) — фрагмент коду в <code>static { ... }</code>, що не належить жодному методу. Він виконується один раз, коли JVM завантажує клас у пам'ять, і зручний для ініціалізації статичних полів, якщо для цього недостатньо одного виразу.</p><section class="predict"><h4>Що виведе програма?</h4><p>Що виведе програма зі слайда?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">StringExample.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class StringExample {
+    static String str = &quot;Hello Java!&quot;;
+
+    static {
+        System.out.println(str);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(&quot;Hello from the method 'main'&quot;);
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>Hello Java!
+Hello from the method 'main'</pre></div><p>Щоб викликати <code>main</code>, JVM спочатку має завантажити клас <code>StringExample</code>. Під час завантаження ініціалізуються статичні поля і виконуються статичні блоки в тому порядку, в якому вони записані: спочатку <code>str</code> отримує значення <code>&quot;Hello Java!&quot;</code>, потім статичний блок його друкує. Лише після цього починає виконуватися <code>main</code>.</p></div></section><section class="predict"><h4>Що виведе програма?</h4><p>А тепер клас, який завантажується не одразу. Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Config.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Config {
+    private static int created;
+
+    static {
+        System.out.println(&quot;Клас Config завантажено&quot;);
+    }
+
+    public Config() {
+        created++;
+        System.out.println(&quot;Створено об'єкт №&quot; + created);
+    }
+
+    public static int getCreated() {
+        return created;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        System.out.println(&quot;Початок main&quot;);
+        new Config();
+        new Config();
+        System.out.println(&quot;Створено об'єктів: &quot; + Config.getCreated());
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>Початок main
+Клас Config завантажено
+Створено об'єкт №1
+Створено об'єкт №2
+Створено об'єктів: 2</pre></div><p>Програма стартує з класу <code>Main</code>, а клас <code>Config</code> завантажується лише тоді, коли знадобився вперше, тобто на першому <code>new Config()</code>. Тому «Початок main» друкується раніше за повідомлення статичного блоку. Статичний блок виконується рівно один раз, хоч об'єктів створено два, а конструктор, навпаки, виконується для кожного об'єкта.</p></div></section><h2 id="s23">Ключове слово final</h2><h3 id="s24">Поля, які не можна змінити</h3><p>У розділі про інкапсуляцію поле <code>id</code> було доступне лише для читання, бо для нього не написали сеттера. Але це трималося лише на дисципліні: будь-хто, хто редагуватиме клас пізніше, може додати сеттер або змінити <code>id</code> в іншому методі, і компілятор не заперечить.</p><div class="chain"><section class="step step-problem"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Проблема</h4><p>Деякі поля мають отримати значення один раз при створенні об'єкта і більше ніколи не змінюватися: ідентифікатор, дата реєстрації, номер документа. Відсутність сеттера не гарантує цього, бо змінити поле може будь-який метод самого класу.</p></div></section><section class="step step-why"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Чому так стається</h4><p>Звичайне поле дозволяє присвоєння в будь-якому місці класу. Компілятор не знає, що програміст задумав його як незмінне.</p></div></section><section class="step step-solution"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Рішення</h4><p>Оголосити поле з модифікатором <code>final</code>. Такому полю значення присвоюється рівно один раз: або в рядку оголошення, або в кожному конструкторі. Будь-яка спроба присвоїти його ще раз, хоч у сеттері, хоч в іншому методі, — помилка компіляції.</p></div></section><section class="step step-when"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Коли застосовувати</h4><p>Для полів, які за змістом не повинні змінюватися після створення об'єкта. Модифікатор <code>final</code> водночас документує намір: читач одразу бачить, що поле незмінне.</p></div></section></div><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    public static final int MAX_RATING = 100;
+
+    private final String id;
+    private String name;
+
+    public Student(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student s = new Student(&quot;ST-001&quot;, &quot;Alice&quot;);
+        System.out.println(s.getId() + &quot;: &quot; + s.getName() + &quot;, максимум балів: &quot; + Student.MAX_RATING);
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>ST-001: Alice, максимум балів: 100</pre></div></figure><p>Компілятор стежить за <code>final</code>-полем з обох боків. Якщо додати метод, що присвоює йому значення, програма не скомпілюється:</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public void setId(String id) {
+    this.id = id;
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>error: cannot assign a value to final variable id</pre></div></figure><p>А якщо в класі є конструктор, який забуває присвоїти <code>final</code>-полю значення, наприклад порожній конструктор без параметрів, компілятор теж відмовить, бо поле лишилося б без значення назавжди:</p><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>error: variable id might not have been initialized</pre></div><h3 id="s25">Константи</h3><p>Поле <code>MAX_RATING</code> у прикладі вище оголошене як <code>public static final</code>. Таке поєднання і є константою в Java: <code>static</code> означає, що значення одне на весь клас, а <code>final</code> — що воно ніколи не зміниться. Константи, на відміну від звичайних полів, часто роблять публічними: змінити їх однаково неможливо, тому інкапсуляція не порушується. Ім'я константи пишуть великими літерами з підкресленнями.</p><section class="anti"><div class="anti-bad"><h4>Антипатерн: «Магічне число»</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public double getBonuses() {
+    return getSalary() * 10 / 100.0;
+}</code></pre></figure><p>Число <code>10</code> у формулі нічого не пояснює: читач мусить здогадуватися, що це відсоток бонусу. Якщо відсоток зміниться і число трапляється в кількох місцях, його доведеться шукати й міняти всюди, і одне місце легко пропустити.</p></div><div class="anti-fix"><h4>Як правильно</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">private static final int BONUS_PERCENT = 10;
+
+public double getBonuses() {
+    return getSalary() * BONUS_PERCENT / 100.0;
+}</code></pre></figure><p>Ім'я константи пояснює зміст числа, а саме значення записане в одному місці.</p></div></section><h3 id="s26">final для змінної-посилання</h3><p>Модифікатор <code>final</code> можна поставити й перед локальною змінною або параметром. Для примітивного типу це просто означає, що значення не зміниться. Для посилального типу є важлива тонкість.</p><section class="predict"><h4>Що виведе програма?</h4><p>Що виведе програма? Клас <code>Student</code> має поле <code>name</code>, конструктор, геттер і сеттер.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        final Student student = new Student(&quot;Alice&quot;);
+        student.setName(&quot;Bob&quot;);
+        System.out.println(student.getName());
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>Bob</pre></div><p>Модифікатор <code>final</code> забороняє змінювати саму змінну <code>student</code>, тобто посилання в ній, але не об'єкт, на який вона вказує. Виклик сеттера змінює поле об'єкта, а посилання лишається тим самим, тому код компілюється й друкує <code>Bob</code>. Помилкою був би рядок <code>student = new Student(&quot;Bob&quot;);</code>, бо він записує у <code>final</code>-змінну нове посилання:</p><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>error: cannot assign a value to final variable student</pre></div><p>Отже, <code>final</code> для посилання означає «завжди той самий об'єкт», а не «незмінний об'єкт». Щоб об'єкт став незмінним, усі його поля мають бути <code>final</code> і клас не повинен мати методів, що їх змінюють.</p></div></section><h2 id="s27">Посилання на об'єкти</h2><h3 id="s28">Присвоєння копіює посилання, а не об'єкт</h3><p>Змінна посилального типу зберігає не об'єкт, а посилання на нього, тобто «адресу», за якою об'єкт можна знайти. З цього випливає поведінка, яка часто дивує початківців.</p><section class="predict"><h4>Що виведе програма?</h4><p>Що виведе програма? Клас <code>Student</code> має поле <code>name</code>, геттер і сеттер.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student a = new Student(&quot;Alice&quot;);
+        Student b = a;
+        b.setName(&quot;Bob&quot;);
+        System.out.println(a.getName());
+        System.out.println(b.getName());
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>Bob
+Bob</pre></div><p>Оператор <code>new</code> виконано лише один раз, отже, у пам'яті існує один об'єкт. Рядок <code>Student b = a;</code> не створює копію студента, а копіює посилання: тепер <code>a</code> і <code>b</code> — дві назви одного й того самого об'єкта. Зміна імені через <code>b</code> змінює цей єдиний об'єкт, тому і <code>a.getName()</code>, і <code>b.getName()</code> повертають <code>Bob</code>. Щоб отримати незалежного студента, його треба створити окремим <code>new</code>.</p></div></section><h3 id="s29">Стек і купа</h3><p>Щоб зрозуміти, чому присвоєння поводиться саме так, корисно знати, де JVM зберігає дані. Пам'ять програми умовно поділено на дві області.</p><p>Стек (stack) зберігає локальні змінні та параметри методів. Під час кожного виклику методу на стеку створюється кадр (stack frame) з усіма його локальними змінними, а коли метод завершується, кадр зникає разом з ними. Змінна примітивного типу зберігає значення прямо в кадрі, а змінна посилального типу — лише посилання.</p><p>Купа (heap) зберігає самі об'єкти. Кожен <code>new</code> створює новий об'єкт у купі, разом з усіма його полями. Об'єкт живе в купі незалежно від того, який метод зараз виконується.</p><p>Тому в попередньому прикладі на стеку методу <code>main</code> лежать дві змінні <code>a</code> і <code>b</code>, а в купі — один об'єкт <code>Student</code>, на який обидві вказують. Слайд про передавання аргументів згадує саме цей механізм: параметри методу — це нові змінні в кадрі методу, куди копіюються значення аргументів.</p><h3 id="s30">Збирання сміття</h3><p>Об'єкти створюються оператором <code>new</code>, але в Java немає оператора для їх видалення. Коли на об'єкт не залишилося жодного посилання, до нього вже неможливо звернутися, і JVM сама звільняє пам'ять. Цим займається збирач сміття (garbage collector), який періодично знаходить такі недосяжні об'єкти. Посилання зникає, коли змінна виходить з області видимості (наприклад, метод завершився) або коли змінній присвоюють інше посилання чи <code>null</code>. Точний момент, коли збирач сміття спрацює, програма не контролює, і покладатися на нього в логіці програми не можна.</p><h3 id="s31">null і NullPointerException</h3><p>Значення <code>null</code> означає, що посилання нікуди не вказує. Саме його отримують за замовчуванням поля посилальних типів, наприклад <code>String</code>. Поки з таким полем нічого не роблять, проблеми немає: друк <code>null</code> просто виведе слово <code>null</code>. Але виклик методу через посилання, що дорівнює <code>null</code>, неможливий, бо немає об'єкта, якому можна передати виклик.</p><section class="anti"><div class="anti-bad"><h4>Антипатерн: Виклик методу на полі, яке ще дорівнює null</h4><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private String name;
+
+    public Student() {
+    }
+
+    public int getNameLength() {
+        return name.length();
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student student = new Student();
+        System.out.println(&quot;Створено студента&quot;);
+        System.out.println(student.getNameLength());
+        System.out.println(&quot;Цей рядок не надрукується&quot;);
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Створено студента
+Exception in thread &quot;main&quot; java.lang.NullPointerException: Cannot invoke &quot;String.length()&quot; because &quot;this.name&quot; is null</pre></div></figure><p>Конструктор без параметрів не присвоїв полю <code>name</code> жодного рядка, тож воно лишилося <code>null</code>. Метод <code>length()</code> немає на чому викликати, і JVM аварійно зупиняє програму з винятком <code>NullPointerException</code>, тому останній рядок <code>main</code> так і не виконується. Повідомлення точно називає причину: виклик <code>String.length()</code> неможливий, бо <code>this.name</code> дорівнює <code>null</code>. Після нього JVM друкує рядки <code>at ...</code>, які показують ланцюжок викликів, що привів до помилки, з номерами рядків у файлах. Небезпека в тому, що помилка проявляється не там, де об'єкт створили неповним, а пізніше, в місці першого використання поля.</p></div><div class="anti-fix"><h4>Як правильно</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public Student() {
+    this(&quot;Unknown&quot;);
+}
+
+public Student(String name) {
+    this.name = name;
+}</code></pre></figure><p>Найпростіший захист — не залишати поля посилальних типів без значення: конструктор без параметрів задає осмислене значення за замовчуванням, як у розділі про конструктори. Перевіряти посилання на <code>null</code> можна буде після модуля 04, а перехоплювати винятки — після модуля 09.</p></div></section><h3 id="s32">Порівняння об'єктів через ==</h3><p>Оператор <code>==</code> порівнює значення змінних. Для примітивів значення — це саме число, а для посилальних типів — посилання. Тому для об'єктів <code>==</code> відповідає на питання «чи це той самий об'єкт», а не «чи однакові в них дані».</p><section class="predict"><h4>Що виведе програма?</h4><p>Що виведе програма? Клас <code>Student</code> має поля <code>name</code> і <code>age</code> та конструктор з двома параметрами.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student first = new Student(&quot;Alice&quot;, 18);
+        Student second = new Student(&quot;Alice&quot;, 18);
+        Student third = first;
+        System.out.println(first == second);
+        System.out.println(first == third);
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>false
+true</pre></div><p><code>first</code> і <code>second</code> створено двома окремими <code>new</code>, тому це два різні об'єкти в купі, хоч їхні поля й однакові. Посилання різні, і <code>==</code> повертає <code>false</code>. Змінна <code>third</code> отримала копію посилання з <code>first</code>, тобто вказує на той самий об'єкт, тому <code>first == third</code> дає <code>true</code>.</p></div></section><details class="more"><summary>Попередній перегляд: порівняння за вмістом</summary><p>Для порівняння об'єктів за даними в Java існує метод <code>equals()</code>. Як і <code>toString()</code>, його кожен клас успадковує від <code>Object</code>, і стандартна реалізація теж порівнює посилання, тобто поводиться як <code>==</code>. Щоб <code>equals()</code> порівнював поля, його треба перевизначити, а для цього потрібні умовні оператори (модуль 04) і наслідування (модуль 07). Порівняння рядків через <code>equals()</code> детально розглядається в модулі 13.</p></details><h2 id="s33">Області видимості й час життя змінних</h2><p>У цьому модулі з'явилися всі види змінних, які є в Java, тож варто зібрати їх разом. Вони відрізняються тим, де оголошені, звідки доступні й скільки живуть.</p><p>Локальна змінна оголошується всередині методу або конструктора і доступна лише від місця оголошення до кінця блоку <code>{ ... }</code>, у якому її оголошено. Вона живе в кадрі стеку і зникає, щойно метод завершиться. Значення за замовчуванням вона не має: прочитати локальну змінну, якій нічого не присвоїли, не дозволить компілятор.</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">int total;
+System.out.println(total);</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>error: variable total might not have been initialized</pre></div></figure><p>Параметр — це теж локальна змінна методу, але її значення задає той, хто викликає метод. Параметр живе стільки ж, скільки виклик методу.</p><p>Поле екземпляра оголошується в класі поза методами. Воно існує окремо в кожному об'єкті, живе стільки, скільки живе об'єкт у купі, і доступне з усіх нестатичних методів і конструкторів класу. Якщо полю нічого не присвоїли, воно має значення за замовчуванням.</p><p>Статичне поле теж оголошується в класі, але з <code>static</code>. Воно існує в одному екземплярі на весь клас, з'являється, коли клас завантажується, і доступне з усіх методів класу, зокрема статичних. Значення за замовчуванням воно також має.</p><p>Коли локальна змінна або параметр має те саме ім'я, що й поле, ім'я в методі означає локальну змінну. Ми вже бачили це з параметром у сеттері, але так само поле може «затінити» і звичайна локальна змінна.</p><section class="predict"><h4>Що виведе програма?</h4><p>Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Wallet.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Wallet {
+    private int balance;
+
+    public int deposit(int amount) {
+        int balance = this.balance + amount;
+        return balance;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Wallet wallet = new Wallet();
+        System.out.println(wallet.deposit(50));
+        System.out.println(wallet.deposit(30));
+        System.out.println(wallet.getBalance());
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>50
+30
+0</pre></div><p>Рядок <code>int balance = ...</code> усередині <code>deposit</code> оголошує нову локальну змінну, яка затінює поле. Сума обчислюється правильно і повертається, але записується в локальну змінну, що зникає після завершення методу. Поле <code>this.balance</code> так і лишається <code>0</code>, тому другий виклик знову додає до нуля і повертає <code>30</code>, а <code>getBalance()</code> повертає <code>0</code>. Виправлення — прибрати оголошення типу: <code>this.balance = this.balance + amount; return this.balance;</code>. Тоді метод змінює поле, а не створює нову змінну, і та сама програма виведе <code>50</code>, <code>80</code>, <code>80</code>.</p></div></section><h2 id="s34">Передавання аргументів у метод</h2><p>Java завжди передає аргументи за значенням (pass-by-value). Під час виклику методу для кожного параметра створюється нова змінна, і в неї копіюється значення аргументу. Що саме копіюється, залежить від типу.</p><p>Для примітивних типів (<code>int</code>, <code>double</code>, <code>boolean</code> тощо) копіюється саме значення. Метод працює з копією, і будь-які зміни параметра не впливають на змінну, яку передали.</p><p>Для посилальних типів (<code>String</code>, <code>Student</code> і будь-які інші класи) копіюється посилання на об'єкт, а не сам об'єкт. Копія посилання вказує на той самий об'єкт, що й оригінал. Тому якщо метод змінює об'єкт, наприклад викликає його сеттер, зміни видно і в місці виклику: обидва посилання ведуть до одного об'єкта.</p><section class="predict"><h4>Що виведе програма?</h4><p>Приклад зі слайда з примітивами. Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        int width = 25;
+        int height = 10;
+
+        System.out.println(&quot;Before calling method 'swap': &quot; + &quot;width = &quot; + width + &quot;\tand height = &quot; + height);
+        System.out.print(&quot;Inside the method 'swap': &quot;);
+        swap(width, height);
+        System.out.println(&quot;After calling method 'swap': &quot; + &quot;width = &quot; + width + &quot;\tand height = &quot; + height);
+    }
+
+    public static void swap(int w, int h) {
+        int temp = w;
+        w = h;
+        h = temp;
+        System.out.println(&quot;width = &quot; + w + &quot;\theight = &quot; + h);
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>Before calling method 'swap': width = 25	and height = 10
+Inside the method 'swap': width = 10	height = 25
+After calling method 'swap': width = 25	and height = 10</pre></div><p>Під час виклику <code>swap(width, height)</code> параметр <code>w</code> отримує копію значення <code>25</code>, а <code>h</code> — копію значення <code>10</code>. Метод міняє місцями свої копії, і всередині методу видно <code>10</code> і <code>25</code>. Але змінні <code>width</code> і <code>height</code> у <code>main</code> — це інші змінні, їх ніхто не змінював, тому після виклику вони залишаються <code>25</code> і <code>10</code>. Символ <code>\t</code> у рядках — це табуляція, вона й дає відступ перед «and height».</p></div></section><p>На слайді наступний приклад використовує бібліотечний клас <code>java.awt.Rectangle</code>, у якого поля <code>width</code> і <code>height</code> публічні. Щоб не суперечити принципу інкапсуляції, візьмемо власний клас <code>Rectangle</code> з приватними полями та сеттерами. Механізм від цього не змінюється.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Rectangle.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Rectangle {
+    private int width;
+    private int height;
+
+    public Rectangle(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+}</code></pre></figure><section class="predict"><h4>Що виведе програма?</h4><p>Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Rectangle rectangle = new Rectangle(25, 10);
+        System.out.println(&quot;До виклику: &quot; + rectangle.getWidth() + &quot; x &quot; + rectangle.getHeight());
+        swapSides(rectangle);
+        System.out.println(&quot;Після виклику: &quot; + rectangle.getWidth() + &quot; x &quot; + rectangle.getHeight());
+    }
+
+    static void swapSides(Rectangle rect) {
+        int temp = rect.getWidth();
+        rect.setWidth(rect.getHeight());
+        rect.setHeight(temp);
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>До виклику: 25 x 10
+Після виклику: 10 x 25</pre></div><p>Параметр <code>rect</code> отримує копію посилання з <code>rectangle</code>. Тепер дві змінні вказують на один і той самий об'єкт у пам'яті. Метод через <code>rect</code> викликає сеттери і змінює поля цього об'єкта. Після повернення в <code>main</code> змінна <code>rectangle</code> вказує на той самий, уже зміненого, об'єкт, тому сторони помінялися.</p></div></section><div class="diagram"><svg viewBox="0 0 720 230" width="100%" style="max-width:720px;display:block;margin:0 auto" role="img" aria-label="Дві змінні-посилання вказують на один об'єкт Rectangle">
+<defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--orange)"/></marker></defs>
+<rect x="10" y="10" width="250" height="85" rx="10" fill="var(--navy-soft)" stroke="var(--navy)" stroke-width="1.5"/>
+<text x="26" y="38" font-family="var(--mono)" font-size="15" font-weight="600" fill="var(--navy)">rectangle</text>
+<text x="26" y="60" font-family="var(--sans)" font-size="14" font-weight="400" fill="var(--ink)">змінна в main</text>
+<rect x="10" y="135" width="250" height="85" rx="10" fill="var(--navy-soft)" stroke="var(--navy)" stroke-width="1.5"/>
+<text x="26" y="163" font-family="var(--mono)" font-size="15" font-weight="600" fill="var(--navy)">rect</text>
+<text x="26" y="185" font-family="var(--sans)" font-size="14" font-weight="400" fill="var(--ink)">параметр swapSides</text>
+<rect x="450" y="65" width="260" height="100" rx="10" fill="var(--orange-soft)" stroke="var(--orange)" stroke-width="1.5"/>
+<text x="466" y="93" font-family="var(--sans)" font-size="15" font-weight="600" fill="var(--orange)">об'єкт Rectangle</text>
+<text x="466" y="115" font-family="var(--mono)" font-size="14" font-weight="400" fill="var(--ink)">width, height</text>
+<text x="466" y="137" font-family="var(--sans)" font-size="14" font-weight="400" fill="var(--ink)">(один у пам'яті)</text>
+<line x1="262" y1="52" x2="446" y2="100" stroke="var(--orange)" stroke-width="2" marker-end="url(#ah2)"/><text x="354.0" y="62.0" text-anchor="middle" font-family="var(--mono)" font-size="14" font-weight="600" fill="var(--orange)">посилання</text>
+<line x1="262" y1="178" x2="446" y2="132" stroke="var(--orange)" stroke-width="2" marker-end="url(#ah2)"/><text x="354.0" y="141.0" text-anchor="middle" font-family="var(--mono)" font-size="14" font-weight="600" fill="var(--orange)">копія посилання</text>
+</svg></div><section class="predict"><h4>Що виведе програма?</h4><p>Останній, найпідступніший випадок: метод присвоює параметру новий об'єкт. Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Rectangle rectangle = new Rectangle(25, 10);
+        replace(rectangle);
+        System.out.println(rectangle.getWidth() + &quot; x &quot; + rectangle.getHeight());
+    }
+
+    static void replace(Rectangle rect) {
+        rect = new Rectangle(1, 1);
+        rect.setWidth(100);
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>25 x 10</pre></div><p>Спочатку <code>rect</code> вказує на той самий об'єкт, що й <code>rectangle</code>. Але рядок <code>rect = new Rectangle(1, 1);</code> записує в параметр посилання на зовсім новий об'єкт. Зв'язок з оригіналом розірвано, і <code>setWidth(100)</code> змінює вже новий об'єкт, про який <code>main</code> нічого не знає. Змінна <code>rectangle</code> у <code>main</code> не змінювалася, бо метод отримав лише копію посилання. Саме цей приклад показує, що Java передає посилання за значенням, а не «за посиланням»: метод може змінити об'єкт, але не може змусити змінну в місці виклику вказувати на інший об'єкт.</p></div></section><h2 id="s35">Конструктори</h2><div class="chain"><section class="step step-problem"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Проблема</h4><p>Після <code>new Student()</code> усі поля мають значення за замовчуванням, і для заповнення об'єкта доводиться викликати кілька сеттерів. Між створенням і останнім сеттером об'єкт існує в неповному стані, а про один із сеттерів легко забути.</p></div></section><section class="step step-why"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Чому так стається</h4><p>Звичайні методи викликаються лише після того, як об'єкт уже створено. Потрібне місце, де код гарантовано виконується в момент створення.</p></div></section><section class="step step-solution"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Рішення</h4><p>Конструктор (constructor) — спеціальний метод, який викликається автоматично під час створення об'єкта оператором <code>new</code>. Ім'я конструктора збігається з ім'ям класу, і в нього немає типу результату, навіть <code>void</code>. Конструктор із параметрами дозволяє створити об'єкт одразу заповненим.</p></div></section><section class="step step-when"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Коли застосовувати</h4><p>Конструктор із параметрами — для даних, без яких об'єкт не має сенсу (наприклад, ідентифікатор чи ім'я). Конструктор без параметрів — коли об'єкт можна створити «порожнім» і заповнити пізніше.</p></div></section></div><p>Розрізняють два види конструкторів: без параметрів (його часто називають конструктором за замовчуванням, default constructor) і з параметрами (parameterized constructor). Клас може мати кілька конструкторів з різними списками параметрів, тобто конструктори можна перевантажувати так само, як методи.</p><p>Якщо в класі не оголошено жодного конструктора, компілятор сам додає порожній конструктор без параметрів. Саме тому в прикладі з публічними полями працював виклик <code>new Student()</code>, хоча конструктор ми не писали.</p><section class="anti"><div class="anti-bad"><h4>Антипатерн: Зниклий конструктор без параметрів</h4><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private String name;
+
+    public Student(String name) {
+        this.name = name;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student student = new Student();
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>error: constructor Student in class Student cannot be applied to given types;
+  required: String
+  found:    no arguments</pre></div></figure><p>Компілятор додає конструктор за замовчуванням лише тоді, коли в класі немає <strong>жодного</strong> конструктора. Щойно ви оголосили конструктор із параметрами, автоматичний конструктор більше не створюється, і всі місця, що викликали <code>new Student()</code>, перестають компілюватися.</p></div><div class="anti-fix"><h4>Як правильно</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public Student() {
+}
+
+public Student(String name) {
+    this.name = name;
+}</code></pre></figure><p>Якщо створення «порожнього» об'єкта потрібне, конструктор без параметрів оголошують явно.</p></div></section><h3 id="s36">Лічильник об'єктів і оператор new</h3><p>На слайді клас <code>Student</code> рахує створені об'єкти у статичному полі <code>count</code>: кожен конструктор збільшує його на одиницю. На слайді поле оголошено <code>public static</code>, і його читають напряму як <code>Student.count</code>. Це порушує інкапсуляцію з тих самих причин, що й для звичайних полів: будь-хто може записати в лічильник довільне число. Тому тут поле приватне, а читається через статичний геттер.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private static int count = 0;
+
+    private String name;
+    private int age;
+
+    public Student() {
+        count++;
+    }
+
+    public Student(String name) {
+        this.name = name;
+        count++;
+    }
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+        count++;
+    }
+
+    public static int getCount() {
+        return count;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}</code></pre></figure><section class="predict"><h4>Що виведе програма?</h4><p>Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">StudentDemo.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class StudentDemo {
+    public static void main(String[] args) {
+        Student student1 = new Student();
+        student1.setName(&quot;Alice&quot;);
+        student1.setAge(18);
+
+        Student student2 = new Student(&quot;Bob&quot;);
+        student2.setAge(22);
+
+        Student student3 = new Student(&quot;Carla&quot;, 25);
+        System.out.println(&quot;Count of students is &quot; + Student.getCount());
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>Count of students is 3</pre></div><p>Кожен оператор <code>new</code> викликає рівно один конструктор, обраний за аргументами: для <code>student1</code> без параметрів, для <code>student2</code> з одним рядком, для <code>student3</code> з рядком і числом. Кожен із трьох конструкторів містить <code>count++</code>, тому лічильник збільшується тричі. Виклики сеттерів нових об'єктів не створюють і на лічильник не впливають.</p></div></section><h3 id="s37">Виклик одного конструктора з іншого</h3><p>У попередньому класі рядок <code>count++</code> повторюється в трьох конструкторах, а присвоєння <code>this.name = name</code> — у двох. Якщо колись додасться ще одна дія під час створення, її доведеться дописати в кожен конструктор, і про один легко забути. Тому конструктори зазвичай зводять до одного «головного», а решта викликають його конструкцією <code>this(...)</code>.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private static int count = 0;
+
+    private String name;
+    private int age;
+
+    public Student() {
+        this(&quot;Unknown&quot;, 0);
+    }
+
+    public Student(String name) {
+        this(name, 0);
+    }
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+        count++;
+    }
+
+    public static int getCount() {
+        return count;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student first = new Student();
+        Student second = new Student(&quot;Bob&quot;);
+        Student third = new Student(&quot;Carla&quot;, 25);
+        System.out.println(first.getName() + &quot;, &quot; + first.getAge());
+        System.out.println(second.getName() + &quot;, &quot; + second.getAge());
+        System.out.println(third.getName() + &quot;, &quot; + third.getAge());
+        System.out.println(&quot;Створено студентів: &quot; + Student.getCount());
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Unknown, 0
+Bob, 0
+Carla, 25
+Створено студентів: 3</pre></div></figure><p>Запис <code>this(...)</code> з дужками — це не звернення до поля, а виклик іншого конструктора того самого класу. Компілятор обирає, який саме, за аргументами, як і для перевантажених методів. Лічильник тепер збільшується в одному місці, а кожен об'єкт, навіть створений без параметрів, отримує осмислені початкові значення замість <code>null</code>.</p><aside class="callout callout-note"><h4>Що змінилося в Java 25</h4><p>Традиційно виклик <code>this(...)</code> мав бути першим рядком тіла конструктора. Починаючи з Java 25 (JEP 513, Flexible Constructor Bodies) перед ним дозволено писати інструкції, які не звертаються до полів створюваного об'єкта, наприклад перевірку аргументів. Для прикладів цього модуля різниці немає: ми завжди пишемо <code>this(...)</code> першим рядком, і такий код працює в усіх версіях Java.</p></aside><h2 id="s38">Метод toString()</h2><div class="chain"><section class="step step-problem"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Проблема</h4><p>Якщо надрукувати об'єкт власного класу, результат виглядає як набір незрозумілих символів.</p></div></section></div><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Book book = new Book(&quot;Clean Code&quot;, 464);
+        System.out.println(book);
+    }
+}
+
+class Book {
+    private String title;
+    private int pages;
+
+    public Book(String title, int pages) {
+        this.title = title;
+        this.pages = pages;
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Book@1ee807c6</pre></div></figure><div class="chain"><section class="step step-why"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Чому так стається</h4><p>У Java кожен клас неявно має метод <code>toString()</code>, отриманий від базового класу <code>java.lang.Object</code>. Коли об'єкт передають у <code>System.out.println</code> або склеюють з рядком через <code>+</code>, Java викликає саме цей метод, щоб отримати текстове представлення. Стандартна реалізація з <code>Object</code> нічого не знає про поля вашого класу і повертає ім'я класу, символ <code>@</code> і шістнадцятковий хеш-код об'єкта. Шістнадцяткове число після <code>@</code> у вас буде іншим і може відрізнятися між запусками.</p></div></section><section class="step step-solution"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Рішення</h4><p>Оголосити в класі власний метод <code>public String toString()</code>, який повертає рядок зі значеннями полів. Над методом пишуть анотацію <code>@Override</code>: вона повідомляє компілятору, що метод навмисно замінює успадкований варіант, і компілятор перевіряє, що такий метод справді існує в <code>Object</code>.</p></div></section><section class="step step-when"><span class="step-dot" aria-hidden="true"></span><div class="step-body"><h4>Коли застосовувати</h4><p>Практично в кожному класі, що зберігає дані: це спрощує налагодження і виведення інформації про об'єкт.</p></div></section></div><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private String name;
+    private int age;
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Student{&quot; +
+                &quot;name='&quot; + name + '\'' +
+                &quot;, age=&quot; + age +
+                '}';
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student student = new Student(&quot;Alice&quot;, 18);
+        System.out.println(student);
+        String line = &quot;Новий запис: &quot; + student;
+        System.out.println(line);
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Student{name='Alice', age=18}
+Новий запис: Student{name='Alice', age=18}</pre></div></figure><p>У жодному з рядків <code>toString()</code> не викликається явно: його автоматично викликає і <code>println</code>, і склеювання рядків. Запис <code>'\''</code> — це символ одинарної лапки, екранований зворотною косою рискою.</p><aside class="callout callout-tip"><h4>Генерація в IntelliJ IDEA</h4><p>Писати <code>toString()</code>, конструктори, геттери й сеттери вручну не обов'язково. У IntelliJ IDEA меню Code → Generate (Alt+Insert у Windows і Linux, ⌘N у macOS) пропонує пункти Constructor, Getter, Setter, Getter and Setter, toString() та інші. Ви обираєте поля, і IDE створює код. Наведений вище <code>toString()</code> має саме той вигляд, який генерує IDEA за замовчуванням.</p></aside><section class="anti"><div class="anti-bad"><h4>Антипатерн: Помилка в імені методу</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">@Override
+public String tostring() {
+    return &quot;Student &quot; + name;
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>error: method does not override or implement a method from a supertype</pre></div></figure><p>Без анотації <code>@Override</code> цей код скомпілювався б: з'явився б новий метод <code>tostring</code> з малою <code>s</code>, якого ніхто ніколи не викликає, а <code>println</code> і далі друкував би <code>Student@...</code>. Анотація перетворює непомітну логічну помилку на явну помилку компіляції.</p></div><div class="anti-fix"><h4>Як правильно</h4><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">@Override
+public String toString() {
+    return &quot;Student &quot; + name;
+}</code></pre></figure><p>Саме тому <code>@Override</code> варто писати завжди, коли ви замінюєте успадкований метод.</p></div></section><details class="more"><summary>Попередній перегляд: звідки береться toString (модуль 07)</summary><p>Кожен клас Java, навіть якщо це ніде не написано, є нащадком класу <code>Object</code> і успадковує його методи, зокрема <code>toString()</code>, <code>equals()</code> і <code>hashCode()</code>. Оголошення в класі методу з тією самою сигнатурою, що й в успадкованому, називається перевизначенням (overriding) — не плутати з перевантаженням (overloading). Наслідування та перевизначення детально розбираються в модулі 07.</p></details><details class="more"><summary>Попередній перегляд: записи (record)</summary><p>У сучасному коді Java ви часто побачите записи (records), стандартну можливість мови з Java 16. Запис — це стислий спосіб оголосити клас, який лише зберігає дані:</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Point.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public record Point(int x, int y) {
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Point p = new Point(3, 4);
+        System.out.println(p);
+        System.out.println(p.x() + &quot; &quot; + p.y());
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Point[x=3, y=4]
+3 4</pre></div></figure><p>Один рядок оголошення замінює все, що в цьому модулі ми писали вручну: компілятор сам створює приватні <code>final</code>-поля <code>x</code> і <code>y</code>, конструктор з обома параметрами, методи доступу <code>x()</code> і <code>y()</code> (зверніть увагу: без префікса <code>get</code>), а також <code>toString()</code>, <code>equals()</code> і <code>hashCode()</code>. Сеттерів у запису немає, бо всі його поля незмінні. Записи спираються на незмінність об'єктів і перевизначення <code>equals()</code>, тому в межах основної програми курсу ми пишемо класи вручну: так видно, з чого складається клас і як працює кожна його частина.</p></details><h2 id="s39">Повний приклад: рейтинг студентів</h2><p>Зберемо все разом на завданні зі слайда «Example». Потрібен клас <code>Student</code> з двома приватними полями <code>name</code> і <code>rating</code>, геттерами й сеттерами, конструктором без параметрів і конструктором з параметрами, статичним методом <code>avgRating()</code> для середнього рейтингу всіх студентів, методом <code>betterStudent(Student s)</code>, що визначає, чи кращий поточний студент за переданого, і методом <code>toString()</code>. У <code>main</code> треба створити три об'єкти з даними, введеними з клавіатури, і вивести загальний та середній рейтинг.</p><p>Ключове рішення тут — як рахувати середній рейтинг усіх студентів, не маючи масиву чи списку. Відповідь дає <code>static</code>: клас сам веде два спільні лічильники, кількість студентів <code>count</code> і суму рейтингів <code>totalRating</code>. Конструктор додає до них нового студента, а середнє — це просто сума, поділена на кількість.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Student.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private static int count;
+    private static int totalRating;
+
+    private String name;
+    private int rating;
+
+    public Student() {
+        this(&quot;Unknown&quot;, 0);
+    }
+
+    public Student(String name, int rating) {
+        this.name = name;
+        this.rating = rating;
+        count++;
+        totalRating += rating;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        totalRating = totalRating - this.rating + rating;
+        this.rating = rating;
+    }
+
+    public static int getTotalRating() {
+        return totalRating;
+    }
+
+    public static double avgRating() {
+        return (double) totalRating / count;
+    }
+
+    public boolean betterStudent(Student other) {
+        return rating &gt; other.rating;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Student{name='&quot; + name + &quot;', rating=&quot; + rating + &quot;}&quot;;
+    }
+}</code></pre></figure><p>Кілька рішень у цьому класі варто розібрати окремо.</p><p>Сеттер <code>setRating</code> не просто записує нове значення: спочатку він віднімає від суми старий рейтинг студента і додає новий. Якби поле <code>rating</code> було публічним, зміна рейтингу в обхід сеттера тихо зробила б суму неправильною. Це наочний приклад того, як інкапсуляція дає класу повний контроль над своїми даними.</p><p>Метод <code>betterStudent</code> звертається до <code>other.rating</code>, хоча поле приватне і належить іншому об'єкту. Це дозволено, бо <code>private</code> обмежує доступ на рівні класу, а не об'єкта: будь-який код усередині класу <code>Student</code> бачить приватні поля будь-якого студента. Результатом методу є значення виразу порівняння <code>rating &gt; other.rating</code>, тобто <code>true</code> або <code>false</code>, тож умовний оператор тут не потрібен.</p><p>У <code>avgRating</code> перед діленням стоїть приведення <code>(double)</code>. Без нього <code>totalRating / count</code> було б діленням двох <code>int</code>, і дробова частина відкинулася б ще до того, як результат перетвориться на <code>double</code>.</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Student first = readStudent(scanner);
+        Student second = readStudent(scanner);
+        Student third = readStudent(scanner);
+
+        System.out.println(first);
+        System.out.println(second);
+        System.out.println(third);
+        System.out.println(&quot;Загальний рейтинг: &quot; + Student.getTotalRating());
+        System.out.println(&quot;Середній рейтинг: &quot; + Student.avgRating());
+        System.out.println(first.getName() + &quot; кращий за &quot; + second.getName() + &quot;: &quot; + first.betterStudent(second));
+        System.out.println(second.getName() + &quot; кращий за &quot; + third.getName() + &quot;: &quot; + second.betterStudent(third));
+    }
+
+    static Student readStudent(Scanner scanner) {
+        String name = scanner.next();
+        int rating = scanner.nextInt();
+        return new Student(name, rating);
+    }
+}</code></pre></figure><p>Для вводу <code>Alice 85 Bob 92 Carla 78</code> програма виводить:</p><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>Student{name='Alice', rating=85}
+Student{name='Bob', rating=92}
+Student{name='Carla', rating=78}
+Загальний рейтинг: 255
+Середній рейтинг: 85.0
+Alice кращий за Bob: false
+Bob кращий за Carla: true</pre></div><p>Метод <code>readStudent</code> зчитує ім'я та рейтинг одного студента і повертає готовий об'єкт. <code>Scanner</code> створюється один раз у <code>main</code> і передається параметром, тому всі три виклики читають з одного потоку вводу. Метод <code>scanner.next()</code> читає одне слово, тож ім'я має бути без пробілів.</p><section class="predict"><h4>Що виведе програма?</h4><p>Як поводитимуться статичні лічильники, якщо змінити рейтинг і створити студента конструктором без параметрів? Що виведе програма з тим самим класом <code>Student</code>?</p><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Student alice = new Student(&quot;Alice&quot;, 85);
+        Student bob = new Student(&quot;Bob&quot;, 92);
+        System.out.println(&quot;Середній: &quot; + Student.avgRating());
+        alice.setRating(95);
+        System.out.println(&quot;Середній після зміни: &quot; + Student.avgRating());
+        Student nobody = new Student();
+        System.out.println(&quot;Середній з новим студентом: &quot; + Student.avgRating());
+    }
+}</code></pre></figure><button type="button" class="reveal">Показати відповідь</button><div class="predict-a" hidden><div class="code-out solo"><div class="code-out-h">Вивід</div><pre>Середній: 88.5
+Середній після зміни: 93.5
+Середній з новим студентом: 62.333333333333336</pre></div><p>Після двох конструкторів сума дорівнює <code>85 + 92 = 177</code>, кількість <code>2</code>, середнє <code>88.5</code>. Сеттер замінює в сумі <code>85</code> на <code>95</code>, тому сума стає <code>187</code>, а середнє <code>93.5</code>: лічильник залишився узгодженим. Конструктор без параметрів через <code>this(&quot;Unknown&quot;, 0)</code> створює ще одного студента з рейтингом <code>0</code>, і він теж враховується: <code>187 / 3</code>. Довгий хвіст цифр — звичайна особливість чисел <code>double</code>, які не можуть точно зберегти нескінченний дріб. Цей результат ставить питання про дизайн: чи має «порожній» студент впливати на середній рейтинг? Якщо ні, конструктор без параметрів не повинен збільшувати лічильники, і таке рішення варто ухвалювати свідомо.</p></div></section><h2 id="s40">Практика</h2><section class="task"><h4>Міні-задача: Сума і середнє двох чисел</h4><p>Напишіть консольну програму з методами, що приймають два цілі числа: <code>getTotal</code> повертає їхню суму, <code>getAverage</code> повертає їхнє середнє. Додатково (*) напишіть статичний метод <code>getNumber</code>, який виводить підказку й зчитує число з клавіатури за допомогою <code>Scanner</code>. Викличте методи з <code>main</code> і надрукуйте результати. Для вводу <code>7</code> і <code>2</code> програма має вивести суму <code>9</code> і середнє <code>4.5</code>.</p><p>На слайді метод має сигнатуру <code>getNumber(String prompt)</code>. Згідно з правилом «<code>Scanner</code> створюється один раз і передається параметром» додайте до нього параметр <code>Scanner scanner</code>.</p><details class="hint"><summary>Підказка</summary><p>Подумайте, якого типу має бути результат <code>getAverage</code>. Що поверне вираз <code>(7 + 2) / 2</code>, якщо обидва операнди цілі?</p></details><details class="sol"><summary>Показати рішення</summary><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int first = getNumber(scanner, &quot;Введіть перше число: &quot;);
+        int second = getNumber(scanner, &quot;Введіть друге число: &quot;);
+
+        System.out.println(&quot;Сума &quot; + first + &quot; і &quot; + second + &quot; дорівнює &quot; + getTotal(first, second));
+        System.out.println(&quot;Середнє &quot; + first + &quot; і &quot; + second + &quot; дорівнює &quot; + getAverage(first, second));
+    }
+
+    static int getNumber(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        return scanner.nextInt();
+    }
+
+    static int getTotal(int a, int b) {
+        return a + b;
+    }
+
+    static double getAverage(int a, int b) {
+        return (a + b) / 2.0;
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Введіть перше число: Введіть друге число: Сума 7 і 2 дорівнює 9
+Середнє 7 і 2 дорівнює 4.5</pre></div></figure><p>Цей вивід отримано з вводом, переданим програмі заздалегідь, тому підказки йдуть одна за одною. У звичайній консолі після кожної підказки програма чекатиме, поки ви введете число й натиснете Enter.</p><p>Усі три методи статичні, бо їм не потрібен жоден об'єкт: вони працюють лише з параметрами. У <code>getAverage</code> ділимо на <code>2.0</code>, а не на <code>2</code>. Ділення <code>int</code> на <code>int</code> дало б ціле <code>4</code>, а наявність <code>double</code>-операнда змушує Java обчислити дробовий результат <code>4.5</code>.</p></details></section><section class="task"><h4>Міні-задача: Зарплата працівників</h4><p>Створіть клас <code>Employee</code> з трьома приватними полями <code>name</code>, <code>rate</code> (погодинна ставка, ціле число) і <code>hours</code> (кількість відпрацьованих годин) та статичним полем <code>totalSum</code> — загальна зарплата всіх працівників. Додайте геттери й сеттери, конструктор без параметрів і два конструктори з параметрами. Методи: <code>getSalary()</code> обчислює зарплату за формулою <code>rate * hours</code>, <code>getBonuses()</code> — бонус у розмірі 10% від зарплати, <code>toString()</code> повертає інформацію про працівника.</p><p>У <code>main</code> створіть три об'єкти з даними, введеними з клавіатури, виведіть інформацію про кожного з бонусом і загальну зарплату. Для вводу <code>Alice 200 160 Bob 250 120 Carla 180 140</code> загальна зарплата становить <code>87200</code>. Переконайтеся, що <code>totalSum</code> залишається правильною, якщо після створення змінити кількість годин працівника.</p><details class="hint"><summary>Підказка</summary><p>Загальна сума має змінюватися в кожному місці, де змінюється зарплата: у конструкторі й у сеттерах <code>setRate</code> і <code>setHours</code>. У сеттері спочатку відніміть від суми стару зарплату, потім змініть поле, потім додайте нову зарплату. Щоб не дублювати код у трьох конструкторах, зведіть їх до одного через <code>this(...)</code>. Відсоток бонусу оформіть константою, а не «магічним числом» у формулі.</p></details><details class="sol"><summary>Показати рішення</summary><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Employee.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Employee {
+    private static final int BONUS_PERCENT = 10;
+
+    private static int totalSum;
+
+    private String name;
+    private int rate;
+    private int hours;
+
+    public Employee() {
+        this(&quot;Unknown&quot;, 0, 0);
+    }
+
+    public Employee(String name, int rate) {
+        this(name, rate, 0);
+    }
+
+    public Employee(String name, int rate, int hours) {
+        this.name = name;
+        this.rate = rate;
+        this.hours = hours;
+        totalSum += getSalary();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        totalSum -= getSalary();
+        this.rate = rate;
+        totalSum += getSalary();
+    }
+
+    public int getHours() {
+        return hours;
+    }
+
+    public void setHours(int hours) {
+        totalSum -= getSalary();
+        this.hours = hours;
+        totalSum += getSalary();
+    }
+
+    public static int getTotalSum() {
+        return totalSum;
+    }
+
+    public int getSalary() {
+        return rate * hours;
+    }
+
+    public double getBonuses() {
+        return getSalary() * BONUS_PERCENT / 100.0;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Employee{name='&quot; + name + &quot;', rate=&quot; + rate + &quot;, hours=&quot; + hours + &quot;, salary=&quot; + getSalary() + &quot;}&quot;;
+    }
+}</code></pre></figure><figure class="code"><figcaption><span class="code-lang">java</span><span class="code-title">Main.java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Employee first = readEmployee(scanner);
+        Employee second = readEmployee(scanner);
+        Employee third = readEmployee(scanner);
+
+        System.out.println(first + &quot;, бонус: &quot; + first.getBonuses());
+        System.out.println(second + &quot;, бонус: &quot; + second.getBonuses());
+        System.out.println(third + &quot;, бонус: &quot; + third.getBonuses());
+        System.out.println(&quot;Загальна зарплата: &quot; + Employee.getTotalSum());
+
+        third.setHours(100);
+        System.out.println(&quot;Після зміни годин у &quot; + third.getName() + &quot;: &quot; + Employee.getTotalSum());
+    }
+
+    static Employee readEmployee(Scanner scanner) {
+        String name = scanner.next();
+        int rate = scanner.nextInt();
+        int hours = scanner.nextInt();
+        return new Employee(name, rate, hours);
+    }
+}</code></pre><div class="code-out"><div class="code-out-h">Вивід</div><pre>Employee{name='Alice', rate=200, hours=160, salary=32000}, бонус: 3200.0
+Employee{name='Bob', rate=250, hours=120, salary=30000}, бонус: 3000.0
+Employee{name='Carla', rate=180, hours=140, salary=25200}, бонус: 2520.0
+Загальна зарплата: 87200
+Після зміни годин у Carla: 80000</pre></div></figure><p>Зарплата не зберігається окремим полем, а щоразу обчислюється з <code>rate</code> і <code>hours</code>. Так вона ніколи не розійдеться з полями, з яких складається. Натомість <code>totalSum</code> — це збережене значення, тому його доводиться оновлювати в кожному місці, де змінюється зарплата будь-кого з працівників. Перевірка після <code>setHours(100)</code> це підтверджує: зарплата Carla стала <code>18000</code>, і загальна сума зменшилася з <code>87200</code> до <code>80000</code>.</p><p>Бонус обчислюється як <code>getSalary() * BONUS_PERCENT / 100.0</code>: спочатку ціле множення на константу, потім ділення на <code>double</code>, тому результат дробовий і точний для цілих зарплат. Ставки та години взято цілими, щоб зчитувати їх через <code>nextInt()</code>. Метод <code>nextDouble()</code> очікує десятковий роздільник, прийнятий у мовних налаштуваннях системи (в українській локалі це кома), і це окрема пастка, яка не стосується теми модуля.</p></details></section><h2 id="s41">Підсумок</h2><p>Клас описує новий тип даних, а об'єкти — конкретні екземпляри цього типу, створені оператором <code>new</code>. Поля зберігають стан, методи описують поведінку, конструктори задають початковий стан під час створення. Інкапсуляція робить поля приватними й відкриває доступ до даних лише через методи, тому клас контролює свій стан і може змінювати внутрішню реалізацію, не ламаючи код, що ним користується. Ключове слово <code>this</code> вказує на поточний об'єкт, <code>static</code> відв'язує поле чи метод від об'єктів і прив'язує до класу, а <code>final</code> забороняє повторне присвоєння, і разом зі <code>static</code> дає константу. Змінна посилального типу зберігає посилання, тому присвоєння не копіює об'єкт, <code>==</code> порівнює посилання, а виклик методу через <code>null</code> закінчується <code>NullPointerException</code>. Аргументи в Java завжди передаються за значенням, але для об'єктів значенням є посилання, тому метод може змінити переданий об'єкт. Нарешті, <code>toString()</code> дає об'єкту зрозуміле текстове представлення.</p><section class="quiz" data-quiz><h2 id="s42">Самоперевірка</h2><ol class="q-list"><li class="q"><div class="q-prompt"><p>Яке твердження найточніше описує різницю між класом і об'єктом?</p></div><div class="q-opts"><button type="button" class="opt" data-k="0" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Клас зберігає значення полів, а об'єкт описує, які поля існують</span></button><button type="button" class="opt" data-k="1" data-c="1"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Клас — це шаблон, що описує поля й методи, а об'єкт — конкретний екземпляр, створений за цим шаблоном зі своїми значеннями полів</span></button><button type="button" class="opt" data-k="2" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Клас і об'єкт — синоніми, просто клас пишуть з великої літери</span></button><button type="button" class="opt" data-k="3" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Об'єкт — це клас, у якому всі поля оголошено як private</span></button></div><div class="q-fb" aria-live="polite"></div><div class="q-fbs" hidden><div data-k="0"><p>Хто з них має конкретні значення на кшталт «Petrenko, 19», а хто лише перелік полів?</p></div><div data-k="1"><p>Правильно. Один клас <code>Student</code> може породити скільки завгодно об'єктів, і в кожного будуть свої значення тих самих полів.</p></div><div data-k="2"><p>Чи можна з одного класу створити два об'єкти з різними значеннями? Що тоді спільного між ними, а що різне?</p></div><div data-k="3"><p>Чи змінює модифікатор доступу саму природу оголошення класу?</p></div></div></li><li class="q"><div class="q-prompt"><p>Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Student {
+    private String name;
+
+    public void setName(String name) {
+        name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+// у main:
+Student student = new Student();
+student.setName(&quot;Alice&quot;);
+System.out.println(student.getName());</code></pre></figure></div><div class="q-opts"><button type="button" class="opt" data-k="0" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Alice</span></button><button type="button" class="opt" data-k="1" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Помилку компіляції, бо змінній не можна присвоїти її саму</span></button><button type="button" class="opt" data-k="2" data-c="1"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">null</span></button><button type="button" class="opt" data-k="3" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Порожній рядок</span></button></div><div class="q-fb" aria-live="polite"></div><div class="q-fbs" hidden><div data-k="0"><p>Яку саме змінну означає <code>name</code> ліворуч від <code>=</code> усередині сеттера: поле чи параметр?</p></div><div data-k="1"><p>Чи є в рядку <code>name = name;</code> порушення синтаксису? Пригадайте, що антипатерн у розділі про <code>this</code> компілювався.</p></div><div data-k="2"><p>Правильно. Параметр затіняє поле, тому присвоєння змінює лише параметр, а поле зберігає значення за замовчуванням <code>null</code>.</p></div><div data-k="3"><p>Яке значення за замовчуванням отримує поле посилального типу, наприклад <code>String</code>?</p></div></div></li><li class="q"><div class="q-prompt"><p>Звідки можна звернутися до поля з модифікатором <code>private</code>?</p></div><div class="q-opts"><button type="button" class="opt" data-k="0" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">З будь-якого класу того самого пакета</span></button><button type="button" class="opt" data-k="1" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Лише з методів того самого об'єкта, але не з інших об'єктів того самого класу</span></button><button type="button" class="opt" data-k="2" data-c="1"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Лише з коду всередині того самого класу</span></button><button type="button" class="opt" data-k="3" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">З класу та всіх його нащадків</span></button></div><div class="q-fb" aria-live="polite"></div><div class="q-fbs" hidden><div data-k="0"><p>Який модифікатор дає саме такий рівень доступу? Чи збігається він з <code>private</code>?</p></div><div data-k="1"><p>Як тоді метод <code>betterStudent</code> у повному прикладі читає <code>other.rating</code> іншого студента?</p></div><div data-k="2"><p>Правильно. Обмеження діє на рівні класу, тому метод класу <code>Student</code> бачить приватні поля будь-якого об'єкта <code>Student</code>.</p></div><div data-k="3"><p>Який модифікатор відкриває доступ нащадкам?</p></div></div></li><li class="q"><div class="q-prompt"><p>Які методи можуть одночасно існувати в одному класі?</p></div><div class="q-opts"><button type="button" class="opt" data-k="0" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text"><code>int count(String text)</code> і <code>double count(String text)</code></span></button><button type="button" class="opt" data-k="1" data-c="1"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text"><code>int count(String text)</code> і <code>int count(String text, char symbol)</code></span></button><button type="button" class="opt" data-k="2" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text"><code>public int count(String text)</code> і <code>private int count(String text)</code></span></button><button type="button" class="opt" data-k="3" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text"><code>int count(String text)</code> і <code>int count(String word)</code></span></button></div><div class="q-fb" aria-live="polite"></div><div class="q-fbs" hidden><div data-k="0"><p>Що входить у сигнатуру методу, а що ні? Чи зможе компілятор розрізнити виклик <code>count(&quot;abc&quot;)</code>?</p></div><div data-k="1"><p>Правильно. Списки параметрів різні, тому сигнатури різні, і це коректне перевантаження.</p></div><div data-k="2"><p>Чи входить модифікатор доступу в сигнатуру методу?</p></div><div data-k="3"><p>Що важить для сигнатури: імена параметрів чи їхні типи?</p></div></div></li><li class="q"><div class="q-prompt"><p>Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">public class Ticket {
+    private static int issued;
+    private int number;
+
+    public Ticket() {
+        issued++;
+        number = issued;
+    }
+
+    public int getNumber() { return number; }
+    public static int getIssued() { return issued; }
+}
+// у main:
+Ticket a = new Ticket();
+Ticket b = new Ticket();
+Ticket c = new Ticket();
+System.out.println(a.getNumber() + &quot; &quot; + Ticket.getIssued());</code></pre></figure></div><div class="q-opts"><button type="button" class="opt" data-k="0" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">3 3</span></button><button type="button" class="opt" data-k="1" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">1 1</span></button><button type="button" class="opt" data-k="2" data-c="1"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">1 3</span></button><button type="button" class="opt" data-k="3" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">0 3</span></button></div><div class="q-fb" aria-live="polite"></div><div class="q-fbs" hidden><div data-k="0"><p>Яке значення мало <code>issued</code> саме в момент, коли конструктор присвоював <code>number</code> для об'єкта <code>a</code>?</p></div><div data-k="1"><p>Скільки екземплярів статичного поля <code>issued</code> існує і скільки разів його збільшено?</p></div><div data-k="2"><p>Правильно. Поле <code>number</code> у кожного об'єкта своє і для <code>a</code> запам'ятало значення <code>1</code>, а статичне <code>issued</code> одне на клас і після трьох конструкторів дорівнює <code>3</code>.</p></div><div data-k="3"><p>Що відбувається в конструкторі раніше: збільшення <code>issued</code> чи присвоєння <code>number</code>?</p></div></div></li><li class="q"><div class="q-prompt"><p>Що виведе програма?</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">// клас Box має приватне поле value, геттер і сеттер
+static void addTen(int x) { x = x + 10; }
+static void addTen(Box b) { b.setValue(b.getValue() + 10); }
+// у main:
+int n = 5;
+addTen(n);
+Box box = new Box(5);
+addTen(box);
+System.out.println(n + &quot; &quot; + box.getValue());</code></pre></figure></div><div class="q-opts"><button type="button" class="opt" data-k="0" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">15 15</span></button><button type="button" class="opt" data-k="1" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">5 5</span></button><button type="button" class="opt" data-k="2" data-c="1"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">5 15</span></button><button type="button" class="opt" data-k="3" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Помилку компіляції через два методи з однаковим ім'ям</span></button></div><div class="q-fb" aria-live="polite"></div><div class="q-fbs" hidden><div data-k="0"><p>Що саме отримує параметр <code>x</code>: саму змінну <code>n</code> чи копію її значення?</p></div><div data-k="1"><p>На який об'єкт вказує параметр <code>b</code> під час другого виклику? Чи той самий це об'єкт, що й <code>box</code>?</p></div><div data-k="2"><p>Правильно. Для <code>int</code> метод змінює копію значення, а для <code>Box</code> отримує копію посилання на той самий об'єкт і змінює його через сеттер.</p></div><div data-k="3"><p>Чи відрізняються списки параметрів цих двох методів?</p></div></div></li><li class="q"><div class="q-prompt"><p>Що виведе програма? Клас <code>Student</code> має поле <code>name</code>, конструктор, геттер і сеттер.</p><figure class="code"><figcaption><span class="code-lang">java</span><button type="button" class="copy" aria-label="Скопіювати код">Скопіювати</button></figcaption><pre><code class="language-java">Student a = new Student(&quot;Alice&quot;);
+Student b = a;
+b.setName(&quot;Bob&quot;);
+System.out.println(a.getName() + &quot; &quot; + b.getName());</code></pre></figure></div><div class="q-opts"><button type="button" class="opt" data-k="0" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Alice Bob</span></button><button type="button" class="opt" data-k="1" data-c="1"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Bob Bob</span></button><button type="button" class="opt" data-k="2" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Alice Alice</span></button><button type="button" class="opt" data-k="3" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Помилку компіляції, бо дві змінні не можуть посилатися на один об'єкт</span></button></div><div class="q-fb" aria-live="polite"></div><div class="q-fbs" hidden><div data-k="0"><p>Скільки разів у цьому коді виконується <code>new</code>, а отже, скільки об'єктів <code>Student</code> існує в пам'яті?</p></div><div data-k="1"><p>Правильно. Присвоєння <code>b = a</code> копіює посилання, тож обидві змінні вказують на один об'єкт, і зміна через <code>b</code> видна через <code>a</code>.</p></div><div data-k="2"><p>Через яку змінну викликано сеттер і на який об'єкт вона вказує?</p></div><div data-k="3"><p>Чи пригадуєте приклад з методом <code>swapSides</code>, де параметр і змінна в <code>main</code> вказували на той самий прямокутник?</p></div></div></li><li class="q"><div class="q-prompt"><p>Що станеться з кодом <code>final Student student = new Student(&quot;Alice&quot;);</code>, після якого йде <code>student.setName(&quot;Bob&quot;);</code>?</p></div><div class="q-opts"><button type="button" class="opt" data-k="0" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Помилка компіляції, бо <code>final</code> робить об'єкт незмінним</span></button><button type="button" class="opt" data-k="1" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Програма скомпілюється, але сеттер не змінить ім'я</span></button><button type="button" class="opt" data-k="2" data-c="1"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Код скомпілюється, і ім'я об'єкта зміниться на <code>Bob</code></span></button><button type="button" class="opt" data-k="3" data-c="0"><span class="opt-mark" aria-hidden="true"></span><span class="opt-text">Виникне <code>NullPointerException</code></span></button></div><div class="q-fb" aria-live="polite"></div><div class="q-fbs" hidden><div data-k="0"><p>Що саме зберігає змінна <code>student</code>: сам об'єкт чи посилання на нього? І що з цього забороняє змінювати <code>final</code>?</p></div><div data-k="1"><p>Чи впливає модифікатор змінної на те, як працює метод самого об'єкта?</p></div><div data-k="2"><p>Правильно. <code>final</code> забороняє записати в змінну інше посилання, але не забороняє змінювати поля об'єкта, на який вона вказує.</p></div><div data-k="3"><p>Чи дорівнює посилання <code>student</code> значенню <code>null</code> у момент виклику сеттера?</p></div></div></li></ol><p class="q-score" aria-live="polite"></p></section><section class="sources"><h2 id="s43">Джерела</h2><ul><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/classes.html" target="_blank" rel="noopener">The Java Tutorials: Classes</a><span class="src-note">оголошення класів, полів, методів і конструкторів</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/objects.html" target="_blank" rel="noopener">The Java Tutorials: Objects</a><span class="src-note">створення об'єктів оператором new і використання посилань</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html" target="_blank" rel="noopener">The Java Tutorials: Controlling Access to Members of a Class</a><span class="src-note">модифікатори доступу private, package-private, protected, public</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methods.html" target="_blank" rel="noopener">The Java Tutorials: Defining Methods</a><span class="src-note">заголовок і сигнатура методу, перевантаження</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/arguments.html" target="_blank" rel="noopener">The Java Tutorials: Passing Information to a Method or a Constructor</a><span class="src-note">передавання аргументів за значенням, varargs</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/constructors.html" target="_blank" rel="noopener">The Java Tutorials: Providing Constructors for Your Classes</a><span class="src-note">конструктори та конструктор за замовчуванням</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/thiskey.html" target="_blank" rel="noopener">The Java Tutorials: Using the this Keyword</a><span class="src-note">this для полів і виклик конструктора через this(...)</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html" target="_blank" rel="noopener">The Java Tutorials: Understanding Class Members</a><span class="src-note">статичні поля й методи</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html" target="_blank" rel="noopener">The Java Tutorials: Initializing Fields</a><span class="src-note">статичні блоки ініціалізації</span></li><li><a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html" target="_blank" rel="noopener">The Java Tutorials: Primitive Data Types</a><span class="src-note">значення полів за замовчуванням</span></li><li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html" target="_blank" rel="noopener">Java Language Specification, Java SE 25, Chapter 8: Classes</a><span class="src-note">формальний опис полів, методів, перевантаження, конструкторів і конструктора за замовчуванням</span></li><li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-6.html#jls-6.6" target="_blank" rel="noopener">Java Language Specification, Java SE 25, §6.6 Access Control</a><span class="src-note">формальні правила доступу</span></li><li><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString(" target="_blank" rel="noopener">Java SE 25 API: Object.toString()</a><span class="src-note">) — стандартна реалізація toString</span></li><li><a href="https://www.oracle.com/java/technologies/javase/codeconventions-contents.html" target="_blank" rel="noopener">Code Conventions for the Java Programming Language</a><span class="src-note">структура файлу, порядок секцій, іменування, оголошення</span></li><li><a href="https://google.github.io/styleguide/javaguide.html" target="_blank" rel="noopener">Google Java Style Guide</a><span class="src-note">сучасне правило оголошувати локальні змінні поруч із першим використанням</span></li><li><a href="https://openjdk.org/jeps/513" target="_blank" rel="noopener">JEP 513: Flexible Constructor Bodies</a><span class="src-note">інструкції перед this(...) у конструкторах, починаючи з Java 25</span></li><li><a href="https://openjdk.org/jeps/512" target="_blank" rel="noopener">JEP 512: Compact Source Files and Instance Main Methods</a><span class="src-note">компактні вихідні файли та клас IO в Java 25</span></li><li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.12.4" target="_blank" rel="noopener">Java Language Specification, Java SE 25, §4.12.4 final Variables</a><span class="src-note">правила для final-змінних і полів</span></li><li><a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.10" target="_blank" rel="noopener">Java Language Specification, Java SE 25, §8.10 Record Classes</a><span class="src-note">записи та їхні автоматично створені члени</span></li><li><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/NullPointerException.html" target="_blank" rel="noopener">Java SE 25 API: NullPointerException</a><span class="src-note">коли виникає виняток і що містить його повідомлення</span></li><li><a href="https://docs.oracle.com/en/java/javase/25/docs/specs/javadoc/doc-comment-spec.html" target="_blank" rel="noopener">Documentation Comment Specification for the Standard Doclet (JDK 25)</a><span class="src-note">синтаксис документаційних коментарів і теги @param, @return</span></li></ul></section>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var root = document.documentElement;
+
+  // theme
+  try {
+    var saved = localStorage.getItem('konspekt-theme');
+    if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+  } catch (e) {}
+  var themeBtn = document.querySelector('.theme-btn');
+  if (themeBtn) themeBtn.addEventListener('click', function () {
+    var cur = root.getAttribute('data-theme') ||
+      (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('konspekt-theme', next); } catch (e) {}
+  });
+
+  // syntax highlighting (page stays readable if the library fails to load)
+  try { if (window.hljs) window.hljs.highlightAll(); } catch (e) {}
+
+  // copy buttons
+  document.querySelectorAll('.code .copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.code').querySelector('pre code').innerText;
+      var done = function () {
+        btn.textContent = 'Скопійовано';
+        setTimeout(function () { btn.textContent = 'Скопіювати'; }, 1600);
+      };
+      try {
+        navigator.clipboard.writeText(code).then(done, function () { fallback(code); done(); });
+      } catch (e) { fallback(code); done(); }
+    });
+  });
+  function fallback(text) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+    } catch (e) {}
+  }
+
+  // "what will be displayed?" reveal
+  document.querySelectorAll('.predict .reveal').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var a = btn.nextElementSibling;
+      var open = a.hasAttribute('hidden');
+      if (open) a.removeAttribute('hidden'); else a.setAttribute('hidden', '');
+      btn.textContent = open ? 'Сховати відповідь' : 'Показати відповідь';
+    });
+  });
+
+  // quiz: wrong answer shows its guiding feedback and allows another try;
+  // score counts questions answered correctly on the first attempt
+  document.querySelectorAll('[data-quiz]').forEach(function (quiz) {
+    var qs = quiz.querySelectorAll('.q');
+    var total = qs.length, done = 0, firstTry = 0;
+    var score = quiz.querySelector('.q-score');
+    qs.forEach(function (q) {
+      var tried = false;
+      var fb = q.querySelector('.q-fb');
+      q.querySelectorAll('.opt').forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          var right = opt.getAttribute('data-c') === '1';
+          var text = q.querySelector('.q-fbs [data-k="' + opt.getAttribute('data-k') + '"]');
+          fb.innerHTML = text ? text.innerHTML : '';
+          fb.classList.toggle('fb-right', right);
+          if (right) {
+            opt.classList.add('is-right');
+            q.querySelectorAll('.opt').forEach(function (o) { o.disabled = true; });
+            if (!tried) firstTry++;
+            done++;
+            if (done === total && score) {
+              score.textContent = 'З першої спроби правильно: ' + firstTry + ' з ' + total + '.';
+            }
+          } else {
+            tried = true;
+            opt.classList.add('is-wrong');
+            opt.disabled = true;
+          }
+        });
+      });
+    });
+  });
+
+  // highlight current section in the table of contents
+  var links = {};
+  document.querySelectorAll('.toc a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting && links[en.target.id]) {
+          Object.keys(links).forEach(function (k) { links[k].classList.remove('active'); });
+          links[en.target.id].classList.add('active');
+        }
+      });
+    }, { rootMargin: '0px 0px -70% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { io.observe(h); });
+  }
+  // collapse the table of contents on narrow screens
+  if (window.matchMedia && matchMedia('(max-width: 1039px)').matches) {
+    var box = document.querySelector('.toc-box');
+    if (box) box.removeAttribute('open');
+  }
+})();
+
+</script>
+</body>
+</html>
