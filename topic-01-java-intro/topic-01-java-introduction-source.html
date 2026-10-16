@@ -373,6 +373,20 @@ p { margin: 0 0 14px; max-width: 72ch; }
 .sources-list { padding-left: 20px; }
 .sources-list li { margin-bottom: 6px; overflow-wrap: anywhere; }
 footer.page-foot { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); margin-top: 40px; padding-top: 16px; }
+.back-top {
+  position: fixed; right: 20px; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); z-index: 40;
+  margin: 0; opacity: 0; visibility: hidden; pointer-events: none;
+}
+.back-top.is-on { opacity: 1; visibility: visible; pointer-events: auto; }
+.back-top a {
+  display: inline-flex; align-items: center;
+  font: 600 14px var(--font-text); text-decoration: none; color: var(--navy-ink);
+  background: var(--navy); border: 2px solid var(--accent); border-radius: 999px; padding: 8px 14px;
+  box-shadow: 0 8px 24px rgba(8, 15, 30, .28);
+}
+.back-top a:hover { border-color: #fff; }
+@media (prefers-reduced-motion: no-preference) { .back-top { transition: opacity .18s ease, visibility .18s ease; } }
+@media print { .back-top { display: none !important; } }
 
 /* ---------- responsive ---------- */
 @media (max-width: 980px) {
@@ -420,7 +434,7 @@ footer.page-foot { color: var(--muted); font-size: 14px; border-top: 1px solid v
 </head>
 <body>
 
-<header class="site-header">
+<header class="site-header" id="top">
   <div class="header-inner">
     <button type="button" class="toc-open" id="tocOpen" aria-controls="toc" aria-expanded="false">
       <span aria-hidden="true">☰</span><span>Зміст</span>
@@ -761,6 +775,7 @@ footer.page-foot { color: var(--muted); font-size: 14px; border-top: 1px solid v
         <li><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IO.html" target="_blank" rel="noopener">Java SE 25 API — java.lang.IO</a></li>
       </ol>
       <footer class="page-foot">Java Fundamentals · Тема 01. Приклади розраховані на JDK 25.</footer>
+      <p class="back-top"><a href="#top">↑ Нагору</a></p>
     </section>
   </main>
 </div>
@@ -1708,6 +1723,13 @@ footer.page-foot { color: var(--muted); font-size: 14px; border-top: 1px solid v
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
   onScroll();
+
+  var backTop = document.querySelector(".back-top");
+  if (backTop) {
+    var syncBackTop = function () { backTop.classList.toggle("is-on", window.scrollY > 480); };
+    syncBackTop();
+    window.addEventListener("scroll", syncBackTop, { passive: true });
+  }
 })();
 </script>
 </body>
